@@ -5,11 +5,14 @@
 *.log
 *.rpt
 *.html
+*.sea
+*.sed
 
 # Radiant UI settings
 reportview.xml
 *.ini
 *.sty
+promote.xml
 
 # Temporary files
 *.tmp
