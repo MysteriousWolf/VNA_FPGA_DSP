@@ -18,6 +18,19 @@ module dsp_core (sys_clk, rst, so, si, sck, scs, meas_done, adc_clk, adc_conv_cl
 	input [11:0] adc_a;
 	input [11:0] adc_b;
 	
+	// Global wires
+	wire global_rst; 	// Global reset wire
+	wire ls_clk; 		// 40  MHz - Low speed clock 
+	wire ms_clk;		// 125 MHz - Medium speed clock (this can either be divided by 2 to get 62.5 MHz clock signal (for ADC), or we can simply route out the low speed clock)
+	wire hs_clk; 		// 250 MHz - High speed clock
+	wire pll_lock;
+	
+	
+	// PLL Wires
+	wire ms_clk_global; // 125 MHz
+	wire hs_clk_global; // 250 MHz
+	
+	// SPI Wires
 	wire so_w;
 	wire si_w;
 	wire sck_w;
@@ -27,7 +40,6 @@ module dsp_core (sys_clk, rst, so, si, sck, scs, meas_done, adc_clk, adc_conv_cl
     wire rst_i;
     wire ipload_i;
     wire ipdone_o;
-    wire sb_clk_i;
     wire sb_wr_i;
     wire sb_stb_i;
     wire [7:0] sb_adr_i;
@@ -37,11 +49,13 @@ module dsp_core (sys_clk, rst, so, si, sck, scs, meas_done, adc_clk, adc_conv_cl
     wire [1:0] spi_pirq_o;
     wire [1:0] spi_pwkup_o;
 	
-	spi_peripheral SPI(miso_w, mosi_w, sck_w, scs_w, spi1_mcs_n_o, 
+	pll_core PLL(ls_clk, global_rst, pll_lock, hs_clk, hs_clk_global, ms_clk, ms_clk_global);
+	
+	spi_peripheral SPI(so_w, si_w, sck_w, scs_w, spi1_mcs_n_o, 
         rst_i, 
         ipload_i, 
         ipdone_o, 
-        sb_clk_i, 
+        ls_clk, 
         sb_wr_i, 
         sb_stb_i, 
         sb_adr_i, 
@@ -50,4 +64,13 @@ module dsp_core (sys_clk, rst, so, si, sck, scs, meas_done, adc_clk, adc_conv_cl
         sb_ack_o, 
         spi_pirq_o, 
         spi_pwkup_o);
+		
+	// Connecting wires with pins
+	assign so_w = so;
+	assign si_w = si;
+	assign sck_w = sck;
+	assign scs_w = scs;
+	
+	assign ls_clk = sys_clk;
+	assign ls_clk = adc_clk; // For now, use the 40 MHz clock for the ADC part.
 endmodule
