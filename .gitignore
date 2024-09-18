@@ -1,0 +1,44 @@
+# Radiant auto-generated directories and files
+.build/
+.recovery/
+.recovery
+*.log
+*.rpt
+*.html
+
+# Radiant UI settings
+reportview.xml
+*.ini
+*.sty
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build outputs (comment out if you want to version control these)
+/impl*/
+*.bin
+*.bit
+*.dcp
+*.mcs
+*.svf
+*.tcr
+
+# Keep project files and source files
+!*.rdf
+!*.v
+!*.vhd
+!*.ldc
+!*.sdc
+!*.pdc
+!*.tcl
+
+# Make sure to keep the source folders
+!/source/
+!/spi_peripheral/
