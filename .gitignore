@@ -18,6 +18,7 @@ promote.xml
 *.tmp
 *.bak
 *.swp
+*.backup
 *~
 
 # OS generated files
