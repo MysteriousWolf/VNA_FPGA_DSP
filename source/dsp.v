@@ -36,7 +36,11 @@ module fir_filt
 	parameter coef_count = 16,
 	localparam coef_id_w = $clog2(coef_count),
 	parameter max_shift = 32,
-	localparam max_shift_w = $clog2(max_shift)
+	localparam max_shift_w = $clog2(max_shift),
+	// How many stages per pipeline (more propagation delay)
+	parameter stages = 4,
+	localparam op_per_stage = coef_count/stages,
+	localparam op_stage_res = coef_count - op_per_stage
 )
 (
 	// General signals
@@ -73,8 +77,8 @@ module fir_filt
 	reg [coef_width-1:0] coeffs [0:coef_count-1];		// Coefficient memory
 	reg [sig_width-1:0] shift_reg_a [0:coef_count-1];	// Shift register for input A
 	reg [sig_width-1:0] shift_reg_b [0:coef_count-1];	// Shift register for input B
-	reg [reg_width-1:0] mac_a;							// MAC for channel A
-	reg [reg_width-1:0] mac_b;							// MAC for channel B
+	reg [reg_width-1:0] mac_a [stages-1:0];							// MAC for channel A
+	reg [reg_width-1:0] mac_b [stages-1:0];							// MAC for channel B
 
 	// Sync conversion clock to the FPGA clock
 	reg cc_r; always @(posedge clk) cc_r <= conv_done;
@@ -85,10 +89,8 @@ module fir_filt
 	always @(posedge clk) begin
 		if (rst) begin
 			// Reset coefficients
-			coeffs[0] <= {coef_width{1'b1}};  // Set the first coefficient to 1 (pass-through function)
-			for (i = 1; i < coef_count; i = i + 1) begin
-				coeffs[i] <= 0;  // Set the rest to 0
-			end
+			coeffs[0] <= 1;  // Set the first coefficient to 1 (pass-through function)
+			for (i = 1; i < coef_count; i = i + 1) coeffs[i] <= 0;  // Set the rest to 0
 			coef_done <= 0;
 		end else if (coef_ready) begin
 			coeffs[addr] <= coef;
@@ -113,18 +115,19 @@ module fir_filt
 	end
 	
 	// Shift register
+	integer j, k;
 	always @(posedge clk) begin
 		if (rst | flush) begin
 			// Reset shift registers, and result shift
-			for (i = 0; i < coef_count; i = i + 1) begin
-				shift_reg_a[i] <= 0;
-				shift_reg_b[i] <= 0;
+			for (j = 0; j < coef_count; j = j + 1) begin
+				shift_reg_a[j] <= 0;
+				shift_reg_b[j] <= 0;
 			end
 		end else if (cc_rising) begin
 			// Shift new inputs into the shift registers
-			for (i = coef_count-1; i > 0; i = i - 1) begin
-				shift_reg_a[i] <= shift_reg_a[i-1];
-				shift_reg_b[i] <= shift_reg_b[i-1];
+			for (k = coef_count-1; k > 0; k = k - 1) begin
+				shift_reg_a[k] <= shift_reg_a[k-1];
+				shift_reg_b[k] <= shift_reg_b[k-1];
 			end
 			shift_reg_a[0] <= adc_in_a;
 			shift_reg_b[0] <= adc_in_b;
@@ -132,18 +135,20 @@ module fir_filt
 	end
 	
 	// MAC
+	integer l, m, stage;
 	always @(posedge clk) begin
 		if (rst | flush) begin
 			// Reset shift registers, MAC accumulators, and result shift
-			mac_a <= 0;
-			mac_b <= 0;
+			for (l = 0; l < stages; l = l + 1) begin
+				mac_a[l] <= 0;
+				mac_b[l] <= 0;
+			end
 		end else if (cc_rising) begin
 			// Perform multiply-accumulate operation for both channels
-			mac_a <= 0;
-			mac_b <= 0;
-			for (i = 0; i < coef_count; i = i + 1) begin
-				mac_a <= mac_a + shift_reg_a[i] * coeffs[i];
-				mac_b <= mac_b + shift_reg_b[i] * coeffs[i];
+			for (m = 0; m < coef_count; m = m + 1) begin
+				stage = m / op_per_stage;
+				mac_a[stage] <= mac_a[stage] + shift_reg_a[m] * coeffs[m];
+				mac_b[stage] <= mac_b[stage] + shift_reg_b[m] * coeffs[m];
 			end
 		end
 	end
@@ -157,11 +162,11 @@ module fir_filt
 		end else if (cc_rising) begin
 			// Apply result shift or truncate
 			if (result_shift != 0) begin
-				filt_out_a <= mac_a >> result_shift;
-				filt_out_b <= mac_b >> result_shift;
+				filt_out_a <= mac_a[0] >> result_shift;
+				filt_out_b <= mac_b[0] >> result_shift;
 			end else begin
-				filt_out_a <= mac_a[sig_width-1:0];
-				filt_out_b <= mac_b[sig_width-1:0];
+				filt_out_a <= mac_a[0][sig_width-1:0];
+				filt_out_b <= mac_b[0][sig_width-1:0];
 			end
 			
 			// Signal that we are done
