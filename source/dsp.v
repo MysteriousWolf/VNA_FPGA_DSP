@@ -77,11 +77,8 @@ module fir_filt
 	reg [reg_width-1:0] mac_b;							// MAC for channel B
 
 	// Sync conversion clock to the FPGA clock
-	reg [1:0] cc_r;
-	always @(posedge clk) 
-		cc_r <= {cc_r[0], conv_done};
-	
-	wire cc_rising = (cc_r[1:0] == 2'b01);
+	reg cc_r; always @(posedge clk) cc_r <= conv_done;
+	wire cc_rising = {cc_r, conv_done} == 2'b01;
 	
 	// Coefficients
 	integer i;

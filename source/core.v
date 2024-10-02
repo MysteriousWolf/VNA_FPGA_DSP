@@ -151,38 +151,26 @@ module dsp_core#(
 	assign adc_clk = ls_clk;
 	
 	// Sync RST and get edges
-    reg [1:0] rst_r;
-    always @(posedge hs_clk) 
-        rst_r <= {rst_r[0], rst};
-    
-    wire rst_rising = (rst_r[1:0] == 2'b01);
-    wire rst_falling = (rst_r[1:0] == 2'b10);
+    reg rst_r; always @(posedge hs_clk) rst_r <= rst;
+    wire rst_rising = {rst_r, rst} == 2'b01;
+    wire rst_falling = {rst_r, rst} == 2'b10;
 	
 	// Detect fir done edge
-    reg [1:0] fd_r;
-    always @(posedge hs_clk) 
-        fd_r <= {fd_r[0], fir_done};
-    
-    wire fd_rising = (fd_r[1:0] == 2'b01);
+    reg fd_r; always @(posedge hs_clk) fd_r <= fir_done;
+    wire fd_rising = {fd_r, fir_done} == 2'b01;
 	
 	// Detect ADDR ready edge
-    reg [3:0] addr_rdy_r;
-    always @(posedge hs_clk) 
-        addr_rdy_r <= {addr_rdy_r[2:0], spi_addr_rdy};
-    
-    wire addr_rdy_rising = (addr_rdy_r[1:0] == 2'b01);
-    wire addr_rdy_rising_d = (addr_rdy_r[2:1] == 2'b01); // delayed to let the address propagate
-    wire addr_rdy_rising_dd = (addr_rdy_r[3:2] == 2'b01); // 2 cyc delayed to let the address propagate
-    wire addr_rdy_falling = (addr_rdy_r[1:0] == 2'b10);
+    reg [2:0] addr_rdy_r; always @(posedge hs_clk) addr_rdy_r <= {addr_rdy_r[1:0], spi_addr_rdy};
+    wire addr_rdy_rising = {addr_rdy_r[0], spi_addr_rdy} == 2'b01;
+    wire addr_rdy_falling = {addr_rdy_r[0], spi_addr_rdy} == 2'b10;
+    wire addr_rdy_rising_d = addr_rdy_r[1:0] == 2'b01; // 1 cyc delay
+    wire addr_rdy_rising_dd = addr_rdy_r[2:1] == 2'b01; // 2 cyc delay
 	
 	// Detect DATA ready edge
-    reg [2:0] data_rdy_r;
-    always @(posedge hs_clk) 
-        data_rdy_r <= {data_rdy_r[1:0], spi_data_rdy};
-    
-    wire data_rdy_rising = (data_rdy_r[1:0] == 2'b01);
-    wire data_rdy_rising_d = (data_rdy_r[2:1] == 2'b01); // delayed data ready for settings that need to send a pulse
-    wire data_rdy_falling = (data_rdy_r[1:0] == 2'b10);
+    reg [1:0] data_rdy_r; always @(posedge hs_clk) data_rdy_r <= {data_rdy_r[0], spi_data_rdy};
+    wire data_rdy_rising = {data_rdy_r[0], spi_data_rdy} == 2'b01;
+    wire data_rdy_falling = {data_rdy_r[0], spi_data_rdy} == 2'b10;
+    wire data_rdy_rising_d = data_rdy_r[1:0] == 2'b01; // 1 cyc delay
 	
 	/*
 	// FIR signals

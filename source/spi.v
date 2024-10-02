@@ -28,9 +28,9 @@ module soft_spi_slave
 	input      [data_width-1:0] data_in 		// Must be ready within 1 serial clock cycle
 );
 	// Sync SCK to the FPGA clock using a 3-bit shift register
-	reg sck_r;  always @(posedge clk) sck_r <= sck;
-	wire sck_risingedge = ({sck_r,sck}==2'b01);
-	wire sck_fallingedge = ({sck_r,sck}==2'b10);
+	reg sck_r; always @(posedge clk) sck_r <= sck;
+	wire sck_risingedge = {sck_r, sck} == 2'b01;
+	wire sck_fallingedge = {sck_r, sck} == 2'b10;
 	
 	// Counters
 	reg [counter_width:0] 		data_count = 0;
