@@ -135,7 +135,7 @@ module fir_filt
 	end
 	
 	// Pipelined MAC
-	integer l, m, stage;
+	integer l, m, n, stage;
 	always @(posedge clk) begin
 		if (rst | flush) begin
 			// Reset shift registers, MAC accumulators, and result shift
@@ -145,12 +145,24 @@ module fir_filt
 			end
 		end else if (cc_rising) begin
 			// Perform multiply-accumulate operation for both channels
-			mac_a[0] <= shift_reg_a[0] * coeffs[0];
-			mac_b[0] <= shift_reg_b[0] * coeffs[0];
-			for (m = 1; m < coef_count; m = m + 1) begin
+			for (m = 0; m < coef_count; m = m + 1) begin
+				// Calculate which stage we are in
 				stage = m / op_per_stage;
-				mac_a[stage] <= mac_a[stage - 1] + shift_reg_a[m] * coeffs[m];
-				mac_b[stage] <= mac_b[stage - 1] + shift_reg_b[m] * coeffs[m];
+				
+				// Add previous stage to the current one
+				if ((m - stage*op_per_stage) == 0) begin
+					if (m == 0) begin
+						mac_a[stage] <= 0;
+						mac_b[stage] <= 0;
+					end else begin
+						mac_a[stage] <= mac_a[stage - 1];
+						mac_b[stage] <= mac_b[stage - 1];
+					end
+				end
+					
+				// Add together all 
+				mac_a[stage] <= mac_a[stage] + shift_reg_a[m] * coeffs[m];
+				mac_b[stage] <= mac_b[stage] + shift_reg_b[m] * coeffs[m];
 			end
 		end
 	end
