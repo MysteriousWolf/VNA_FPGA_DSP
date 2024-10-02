@@ -134,7 +134,7 @@ module fir_filt
 		end
 	end
 	
-	// MAC
+	// Pipelined MAC
 	integer l, m, stage;
 	always @(posedge clk) begin
 		if (rst | flush) begin
@@ -145,10 +145,12 @@ module fir_filt
 			end
 		end else if (cc_rising) begin
 			// Perform multiply-accumulate operation for both channels
-			for (m = 0; m < coef_count; m = m + 1) begin
+			mac_a[0] <= shift_reg_a[0] * coeffs[0];
+			mac_b[0] <= shift_reg_b[0] * coeffs[0];
+			for (m = 1; m < coef_count; m = m + 1) begin
 				stage = m / op_per_stage;
-				mac_a[stage] <= mac_a[stage] + shift_reg_a[m] * coeffs[m];
-				mac_b[stage] <= mac_b[stage] + shift_reg_b[m] * coeffs[m];
+				mac_a[stage] <= mac_a[stage - 1] + shift_reg_a[m] * coeffs[m];
+				mac_b[stage] <= mac_b[stage - 1] + shift_reg_b[m] * coeffs[m];
 			end
 		end
 	end
