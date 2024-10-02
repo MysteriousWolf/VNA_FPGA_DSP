@@ -44,6 +44,9 @@ Thumbs.db
 !*.pdc
 !*.tcl
 
+# Simulation files
+/simulation/*
+
 # Make sure to keep the source folders
 !/source/
 !/spi_peripheral/
