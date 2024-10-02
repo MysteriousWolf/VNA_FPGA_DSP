@@ -162,11 +162,11 @@ module fir_filt
 		end else if (cc_rising) begin
 			// Apply result shift or truncate
 			if (result_shift != 0) begin
-				filt_out_a <= mac_a[0] >> result_shift;
-				filt_out_b <= mac_b[0] >> result_shift;
+				filt_out_a <= mac_a[stages-1] >> result_shift;
+				filt_out_b <= mac_b[stages-1] >> result_shift;
 			end else begin
-				filt_out_a <= mac_a[0][sig_width-1:0];
-				filt_out_b <= mac_b[0][sig_width-1:0];
+				filt_out_a <= mac_a[stages-1][sig_width-1:0];
+				filt_out_b <= mac_b[stages-1][sig_width-1:0];
 			end
 			
 			// Signal that we are done
