@@ -1,0 +1,2 @@
+dsp_core,/,C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/core.v
+soft_spi_slave_tf,/,C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/soft_spi_slave_tf.v

@@ -1,0 +1,15 @@
+{C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source/spi.v} {1 {vlog -work work -stats=none {C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source/spi.v}
+Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
+-- Compiling module soft_spi_slave
+
+Top level modules:
+	soft_spi_slave
+
+} {} {}} {C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/soft_spi_slave_tf.v} {1 {vlog -work work -stats=none {C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/soft_spi_slave_tf.v}
+Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
+-- Compiling module soft_spi_slave_tf
+
+Top level modules:
+	soft_spi_slave_tf
+
+} {} {}}

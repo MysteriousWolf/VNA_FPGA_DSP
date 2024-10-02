@@ -33,6 +33,7 @@ Thumbs.db
 *.mcs
 *.svf
 *.tcr
+*.dmp
 
 # Keep project files and source files
 !*.rdf

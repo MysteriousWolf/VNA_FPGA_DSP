@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
-<RadiantModule architecture="iCE40UP" date="2024 09 18 11:27:20" device="iCE40UP5K" gen_platform="Radiant" generator="ipgen" library="module" module="spi_i2c" name="spi_peripheral" package="SG48" source_format="Verilog" speed="High-Performance_1.2V" vendor="latticesemi.com" version="1.0.0">
+<RadiantModule architecture="iCE40UP" date="2024 09 25 18:02:13" device="iCE40UP5K" gen_platform="Radiant" generator="ipgen" library="module" module="spi_i2c" name="spi_peripheral" package="SG48" source_format="Verilog" speed="High-Performance_1.2V" vendor="latticesemi.com" version="1.0.0">
  <Package>
-  <File modified="2024 09 18 11:27:20" name="rtl/spi_peripheral_bb.v" type="black_box_verilog"/>
-  <File modified="2024 09 18 11:27:20" name="spi_peripheral.cfg" type="cfg"/>
-  <File modified="2024 09 18 11:27:20" name="misc/spi_peripheral_tmpl.v" type="template_verilog"/>
-  <File modified="2024 09 18 11:27:20" name="misc/spi_peripheral_tmpl.vhd" type="template_vhdl"/>
-  <File modified="2024 09 18 11:27:20" name="rtl/spi_peripheral.v" type="top_level_verilog"/>
-  <File modified="2024 09 18 11:27:20" name="component.xml" type="IP-XACT_component"/>
-  <File modified="2024 09 18 11:27:20" name="design.xml" type="IP-XACT_design"/>
+  <File modified="2024 09 25 18:02:13" name="rtl/spi_peripheral_bb.v" type="black_box_verilog"/>
+  <File modified="2024 09 25 18:02:13" name="spi_peripheral.cfg" type="cfg"/>
+  <File modified="2024 09 25 18:02:13" name="misc/spi_peripheral_tmpl.v" type="template_verilog"/>
+  <File modified="2024 09 25 18:02:13" name="misc/spi_peripheral_tmpl.vhd" type="template_vhdl"/>
+  <File modified="2024 09 25 18:02:13" name="rtl/spi_peripheral.v" type="top_level_verilog"/>
+  <File modified="2024 09 25 18:02:13" name="component.xml" type="IP-XACT_component"/>
+  <File modified="2024 09 25 18:02:13" name="design.xml" type="IP-XACT_design"/>
  </Package>
 </RadiantModule>

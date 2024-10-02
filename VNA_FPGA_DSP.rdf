@@ -6,10 +6,25 @@
         <Source name="source/core.v" type="Verilog" type_short="Verilog">
             <Options top_module="dsp_core"/>
         </Source>
-        <Source name="spi_peripheral/spi_peripheral.ipx" type="IPX_Module" type_short="IPX">
+        <Source name="source/spi.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="pll_core/pll_core.ipx" type="IPX_Module" type_short="IPX">
+            <Options/>
+        </Source>
+        <Source name="soft_spi_slave_tf.v" type="Verilog" type_short="Verilog" syn_sim="SimOnly">
+            <Options/>
+        </Source>
+        <Source name="source/dsp.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="simulation/simulation.spf" type="Simulation Project File" type_short="SPF">
             <Options/>
         </Source>
         <Source name="VNA_FPGA_DSP.pdc" type="Physical Constraints File" type_short="PDC">
+            <Options/>
+        </Source>
+        <Source name="VNA_FPGA_DSP.sdc" type="Pre-Synthesis Constraints File" type_short="SDC">
             <Options/>
         </Source>
     </Implementation>

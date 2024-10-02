@@ -1,0 +1,21 @@
+# Reading pref.tcl
+# do C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/simulation/simulation.mdo
+# Loading project simulation
+# vsim -L work -L pmi_work -L ovi_ice40up -suppress vsim-7033,vsim-8630,3009,3389 soft_spi_slave_tf 
+# Start time: 11:10:55 on Sep 29,2024
+# //  ModelSim - Lattice FPGA Edition 2023.3 Jul 18 2023
+# //
+# //  Copyright 1991-2023 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  ModelSim - Lattice FPGA Edition and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading work.soft_spi_slave_tf
+# Loading work.soft_spi_slave
+# .main_pane.wave.interior.cs.body.pw.wf

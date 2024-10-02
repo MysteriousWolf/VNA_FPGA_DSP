@@ -1,0 +1,135 @@
+m255
+K4
+z2
+!s11f vlog 2023.3 2023.07, Jul 18 2023
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/simulation
+vdsp_core
+2C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source/core.v
+Z1 !s110 1727430090
+!i10b 1
+!s100 ]9U6o2V0Rd:V5X[Om>A`U0
+IS_a_e1T0hNE64AEG1P2aN2
+R0
+w1727380362
+8C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source/core.v
+FC:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source/core.v
+!i122 0
+L0 1 74
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+Z3 OT;L;2023.3;77
+r1
+!s85 0
+31
+!s108 1727430089.000000
+!s107 C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source/core.v|
+!s90 -reportprogress|300|+incdir+C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source|-work|work|C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source/core.v|-suppress|2388|
+!s101 -O0
+!i113 1
+Z4 o-suppress 2388 -work work -O0
+!s92 -suppress 2388 {+incdir+C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source} -work work -O0
+Z5 tCvgOpt 0
+vpll_core
+Z6 2C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/pll_core/rtl/pll_core.v
+!s125 LATTICE_CONN
+R1
+!i10b 1
+!s100 ZUQGcP=m<cL`ko;D2f2?U1
+IUzO1<O69N2TQ?iXjlON?n3
+R0
+Z7 w1727378639
+Z8 8C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/pll_core/rtl/pll_core.v
+Z9 FC:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/pll_core/rtl/pll_core.v
+!i122 2
+L0 11 39
+R2
+R3
+r1
+!s85 0
+31
+Z10 !s108 1727430090.000000
+Z11 !s107 C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/pll_core/rtl/pll_core.v|
+Z12 !s90 -reportprogress|300|+incdir+C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/pll_core/rtl|-work|work|C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/pll_core/rtl/pll_core.v|-suppress|2388|
+!s101 -O0
+!i113 1
+R4
+Z13 !s92 -suppress 2388 {+incdir+C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/pll_core/rtl} -work work -O0
+R5
+vpll_core_ipgen_lscc_pll
+R6
+R1
+!i10b 1
+!s100 kG3?S0dn9N?DbmCb;eP1J0
+IZMlEAeWo3cj2UR_fJE15Z2
+R0
+R7
+R8
+R9
+!i122 2
+L0 105 120
+R2
+R3
+r1
+!s85 0
+31
+R10
+R11
+R12
+!s101 -O0
+!i113 1
+R4
+R13
+R5
+vsoft_spi_slave
+2C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source/spi.v
+!s110 1727452281
+!i10b 1
+!s100 Y;4S23=<YL3JHozbj^J_=1
+IdhIGi[o_3Iombk9iJP1W03
+R0
+w1727452273
+8C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source/spi.v
+FC:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source/spi.v
+!i122 26
+L0 2 122
+R2
+R3
+r1
+!s85 0
+31
+!s108 1727452281.000000
+!s107 C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source/spi.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/source/spi.v|
+!s101 -O0
+!i113 1
+Z14 o-work work -O0
+R5
+vsoft_spi_slave_tf
+2C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/soft_spi_slave_tf.v
+!s110 1727452325
+!i10b 1
+!s100 eTg:lY983YcU[dlFa]]TF0
+IhSamK8A^SEO^I;LQDbj]i0
+R0
+w1727452318
+8C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/soft_spi_slave_tf.v
+FC:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/soft_spi_slave_tf.v
+!i122 27
+L0 18 118
+R2
+R3
+r1
+!s85 0
+31
+!s108 1727452325.000000
+!s107 C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/soft_spi_slave_tf.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/matej/iCloudDrive/School/Magistrsko delo/Phase Detector/VNA_FPGA_DSP/soft_spi_slave_tf.v|
+!s101 -O0
+!i113 1
+R14
+R5

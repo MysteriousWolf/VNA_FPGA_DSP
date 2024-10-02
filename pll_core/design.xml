@@ -39,7 +39,7 @@
                     <ipxact:configurableElementValue referenceId="DELAY_ADJUSTMENT_MODE_RELATIVE">FIXED</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="FDA_RELATIVE">0</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="DIVQ">2</ipxact:configurableElementValue>
-                    <ipxact:configurableElementValue referenceId="enable_lock">True</ipxact:configurableElementValue>
+                    <ipxact:configurableElementValue referenceId="enable_lock">False</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="enable_bypass">False</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="ENABLE_ICEGATE_PORTA">False</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="ENABLE_ICEGATE_PORTB">False</ipxact:configurableElementValue>
@@ -99,9 +99,9 @@
         </ipxact:adHocConnection>
         <ipxact:adHocConnection>
             <ipxact:name>pll_core.lock_o</ipxact:name>
+            <ipxact:tiedValue>open</ipxact:tiedValue>
             <ipxact:portReferences>
                 <ipxact:internalPortReference componentRef="pll_core" portRef="lock_o"/>
-                <ipxact:externalPortReference portRef="lock_o"/>
             </ipxact:portReferences>
         </ipxact:adHocConnection>
         <ipxact:adHocConnection>

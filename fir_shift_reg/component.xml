@@ -2,59 +2,64 @@
 <ipxact:component xmlns:ipxact="http://www.accellera.org/XMLSchema/IPXACT/1685-2014" xmlns:lattice="http://www.latticesemi.com/lattice" xmlns:lsccip="http://www.latticesemi.com/XMLSchema/Radiant/ip">
     <ipxact:vendor>latticesemi.com</ipxact:vendor>
     <ipxact:library>module</ipxact:library>
-    <ipxact:name>pll_core</ipxact:name>
-    <ipxact:version>1.0.1</ipxact:version>
+    <ipxact:name>fir_shift_reg</ipxact:name>
+    <ipxact:version>2.0.0</ipxact:version>
     <ipxact:model>
         <ipxact:instantiations>
             <ipxact:componentInstantiation>
-                <ipxact:name>pll_core</ipxact:name>
+                <ipxact:name>fir_shift_reg</ipxact:name>
             </ipxact:componentInstantiation>
             <ipxact:designInstantiation>
-                <ipxact:name>pll_core_design</ipxact:name>
-                <ipxact:designRef library="module" name="pll_core" vendor="latticesemi.com" version="1.0.1"/>
+                <ipxact:name>fir_shift_reg_design</ipxact:name>
+                <ipxact:designRef library="module" name="fir_shift_reg" vendor="latticesemi.com" version="2.0.0"/>
             </ipxact:designInstantiation>
         </ipxact:instantiations>
         <ipxact:ports>
             <ipxact:port>
-                <ipxact:name>ref_clk_i</ipxact:name>
-                <ipxact:displayName>ref_clk_i</ipxact:displayName>
+                <ipxact:name>clk_i</ipxact:name>
+                <ipxact:displayName>clk_i</ipxact:displayName>
                 <ipxact:wire>
                     <ipxact:direction>in</ipxact:direction>
                 </ipxact:wire>
             </ipxact:port>
             <ipxact:port>
-                <ipxact:name>rst_n_i</ipxact:name>
-                <ipxact:displayName>rst_n_i</ipxact:displayName>
+                <ipxact:name>rst_i</ipxact:name>
+                <ipxact:displayName>rst_i</ipxact:displayName>
                 <ipxact:wire>
                     <ipxact:direction>in</ipxact:direction>
                 </ipxact:wire>
             </ipxact:port>
             <ipxact:port>
-                <ipxact:name>outcore_o</ipxact:name>
-                <ipxact:displayName>outcore_o</ipxact:displayName>
+                <ipxact:name>clk_en_i</ipxact:name>
+                <ipxact:displayName>clk_en_i</ipxact:displayName>
                 <ipxact:wire>
-                    <ipxact:direction>out</ipxact:direction>
+                    <ipxact:direction>in</ipxact:direction>
                 </ipxact:wire>
             </ipxact:port>
             <ipxact:port>
-                <ipxact:name>outglobal_o</ipxact:name>
-                <ipxact:displayName>outglobal_o</ipxact:displayName>
+                <ipxact:name>wr_data_i</ipxact:name>
+                <ipxact:displayName>wr_data_i</ipxact:displayName>
                 <ipxact:wire>
-                    <ipxact:direction>out</ipxact:direction>
+                    <ipxact:direction>in</ipxact:direction>
+                    <ipxact:vectors>
+                        <ipxact:vector>
+                            <ipxact:left>11</ipxact:left>
+                            <ipxact:right>0</ipxact:right>
+                        </ipxact:vector>
+                    </ipxact:vectors>
                 </ipxact:wire>
             </ipxact:port>
             <ipxact:port>
-                <ipxact:name>outcoreb_o</ipxact:name>
-                <ipxact:displayName>outcoreb_o</ipxact:displayName>
+                <ipxact:name>rd_data_o</ipxact:name>
+                <ipxact:displayName>rd_data_o</ipxact:displayName>
                 <ipxact:wire>
                     <ipxact:direction>out</ipxact:direction>
-                </ipxact:wire>
-            </ipxact:port>
-            <ipxact:port>
-                <ipxact:name>outglobalb_o</ipxact:name>
-                <ipxact:displayName>outglobalb_o</ipxact:displayName>
-                <ipxact:wire>
-                    <ipxact:direction>out</ipxact:direction>
+                    <ipxact:vectors>
+                        <ipxact:vector>
+                            <ipxact:left>11</ipxact:left>
+                            <ipxact:right>0</ipxact:right>
+                        </ipxact:vector>
+                    </ipxact:vectors>
                 </ipxact:wire>
             </ipxact:port>
         </ipxact:ports>
@@ -63,33 +68,49 @@
         <ipxact:fileSet>
             <ipxact:name>ipx_file_list</ipxact:name>
             <ipxact:file>
-                <ipxact:name>rtl/pll_core_bb.v</ipxact:name>
+                <ipxact:name>rtl/fir_shift_reg_bb.v</ipxact:name>
                 <ipxact:fileType user="black_box_verilog">user</ipxact:fileType>
             </ipxact:file>
             <ipxact:file>
-                <ipxact:name>pll_core.cfg</ipxact:name>
+                <ipxact:name>fir_shift_reg.cfg</ipxact:name>
                 <ipxact:fileType user="cfg">user</ipxact:fileType>
             </ipxact:file>
             <ipxact:file>
-                <ipxact:name>misc/pll_core_tmpl.v</ipxact:name>
+                <ipxact:name>misc/fir_shift_reg_tmpl.v</ipxact:name>
                 <ipxact:fileType user="template_verilog">user</ipxact:fileType>
             </ipxact:file>
             <ipxact:file>
-                <ipxact:name>misc/pll_core_tmpl.vhd</ipxact:name>
+                <ipxact:name>misc/fir_shift_reg_tmpl.vhd</ipxact:name>
                 <ipxact:fileType user="template_vhdl">user</ipxact:fileType>
             </ipxact:file>
             <ipxact:file>
-                <ipxact:name>rtl/pll_core.v</ipxact:name>
+                <ipxact:name>rtl/fir_shift_reg.v</ipxact:name>
                 <ipxact:fileType user="top_level_verilog">user</ipxact:fileType>
+            </ipxact:file>
+            <ipxact:file>
+                <ipxact:name>constraints/fir_shift_reg.ldc</ipxact:name>
+                <ipxact:fileType user="timing_constraints">user</ipxact:fileType>
+            </ipxact:file>
+            <ipxact:file>
+                <ipxact:name>testbench/dut_params.v</ipxact:name>
+                <ipxact:fileType user="dependency_file">user</ipxact:fileType>
+            </ipxact:file>
+            <ipxact:file>
+                <ipxact:name>testbench/dut_inst.v</ipxact:name>
+                <ipxact:fileType user="dependency_file">user</ipxact:fileType>
             </ipxact:file>
             <ipxact:file>
                 <ipxact:name>design.xml</ipxact:name>
                 <ipxact:fileType user="IP-XACT_design">user</ipxact:fileType>
             </ipxact:file>
+            <ipxact:file>
+                <ipxact:name>testbench/tb_top.v</ipxact:name>
+                <ipxact:fileType user="testbench_verilog">user</ipxact:fileType>
+            </ipxact:file>
         </ipxact:fileSet>
     </ipxact:fileSets>
     <ipxact:vendorExtensions>
-        <lsccip:moduleRef lsccip:library="module" lsccip:name="pll" lsccip:vendor="latticesemi.com" lsccip:version="1.0.1"/>
+        <lsccip:moduleRef lsccip:library="module" lsccip:name="shift_register" lsccip:vendor="latticesemi.com" lsccip:version="2.0.0"/>
         <lsccip:deviceInfo>
             <lsccip:architecture>iCE40UP</lsccip:architecture>
             <lsccip:device>iCE40UP5K</lsccip:device>
@@ -98,7 +119,7 @@
         </lsccip:deviceInfo>
         <lsccip:generationInfo>
             <lsccip:fileVersion>20180929</lsccip:fileVersion>
-            <lsccip:createdTimestamp>2024 10 02 11:38:25</lsccip:createdTimestamp>
+            <lsccip:createdTimestamp>2024 10 01 10:43:57</lsccip:createdTimestamp>
             <lsccip:radiantBuild>&quot;Lattice Radiant Software&quot; (64-bit) 2023.2.1.288.0</lsccip:radiantBuild>
         </lsccip:generationInfo>
     </ipxact:vendorExtensions>
