@@ -83,7 +83,7 @@ module fir_filt
 	
 	wire cc_rising = (cc_r[1:0] == 2'b01);
 	
-	// Coefficient loading logic
+	// Coefficients
 	integer i;
 	always @(posedge clk) begin
 		if (rst) begin
@@ -102,7 +102,7 @@ module fir_filt
 		end
 	 end
 
-	// Result shift logic
+	// Result shift
 	always @(posedge clk) begin
 		if (rst) begin
 			result_shift <= 0;
@@ -115,31 +115,14 @@ module fir_filt
 		end
 	end
 	
-	// FIR filter operation (including reset and flush) for both A and B channels
+	// Shift register
 	always @(posedge clk) begin
-		if (rst) begin
-			// Reset shift registers, MAC accumulators, and result shift
-			mac_a <= 0;
-			mac_b <= 0;
-			filt_out_a <= 0;
-			filt_out_b <= 0;
+		if (rst | flush) begin
+			// Reset shift registers, and result shift
 			for (i = 0; i < coef_count; i = i + 1) begin
 				shift_reg_a[i] <= 0;
 				shift_reg_b[i] <= 0;
 			end
-			filt_done <= 0;
-		end else if (flush) begin
-			// Reset shift registers, MAC accumulators, and result shift
-			mac_a <= 0;
-			mac_b <= 0;
-			filt_out_a <= 0;
-			filt_out_b <= 0;
-			// Flush shift registers only
-			for (i = 0; i < coef_count; i = i + 1) begin
-				shift_reg_a[i] <= 0;
-				shift_reg_b[i] <= 0;
-			end
-			filt_done <= 0;
 		end else if (cc_rising) begin
 			// Shift new inputs into the shift registers
 			for (i = coef_count-1; i > 0; i = i - 1) begin
@@ -148,7 +131,16 @@ module fir_filt
 			end
 			shift_reg_a[0] <= adc_in_a;
 			shift_reg_b[0] <= adc_in_b;
-
+		end
+	end
+	
+	// MAC
+	always @(posedge clk) begin
+		if (rst | flush) begin
+			// Reset shift registers, MAC accumulators, and result shift
+			mac_a <= 0;
+			mac_b <= 0;
+		end else if (cc_rising) begin
 			// Perform multiply-accumulate operation for both channels
 			mac_a <= 0;
 			mac_b <= 0;
@@ -156,7 +148,16 @@ module fir_filt
 				mac_a <= mac_a + shift_reg_a[i] * coeffs[i];
 				mac_b <= mac_b + shift_reg_b[i] * coeffs[i];
 			end
-			
+		end
+	end
+	
+	// Output shifting
+	always @(posedge clk) begin
+		if (rst | flush) begin
+			filt_out_a <= 0;
+			filt_out_b <= 0;
+			filt_done <= 0;
+		end else if (cc_rising) begin
 			// Apply result shift or truncate
 			if (result_shift != 0) begin
 				filt_out_a <= mac_a >> result_shift;
