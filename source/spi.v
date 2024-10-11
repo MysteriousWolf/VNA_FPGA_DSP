@@ -27,17 +27,17 @@ module soft_spi_slave
 	output reg 					data_ready,
 	input      [data_width-1:0] data_in 		// Must be ready within 1 serial clock cycle
 );
-	// Sync SCK to the FPGA clock using a 3-bit shift register
-	reg sck_r; always @(posedge clk) sck_r <= sck;
-	wire sck_risingedge = {sck_r, sck} == 2'b01;
-	wire sck_fallingedge = {sck_r, sck} == 2'b10;
-	
 	// Counters
-	reg [counter_width:0] 		data_count = 0;
-	reg [data_counter_width:0] 	data_out_count = 0;
+	reg [counter_width:0] data_count;
+	reg [data_counter_width - 1:0] data_out_count;
 	
-	// Data shift reg
-	reg [data_width-1:0]		data_reg = 0;
+	// Data shift reg (needs 1 less bit due to how last bit is handled to reduce output latency and allow consecutive packets)
+	reg [data_width-2:0] data_reg;
+	
+	// Sync SCK to the FPGA clock using a 3-bit shift register
+	reg [1:0] sck_r; always @(posedge clk) sck_r <= {sck_r[0], sck};
+	wire sck_risingedge = sck_r == 2'b01;
+	wire sck_fallingedge = sck_r == 2'b10;
 	
 	// Incoming data shift reg
 	always @ (posedge clk) begin
@@ -46,11 +46,11 @@ module soft_spi_slave
 			data_count <= 0;
 			// Reset registers
 			data_reg <= 0;
-		end else if(~ncs) begin
+		end else begin
 			if(sck_risingedge) begin
 				// Shifting into the data register
-				data_reg <= {data_reg[data_width-2:0], si};
-				data_count <= data_count + 1;
+				data_reg <= {data_reg[data_width-3:0], si};
+				data_count <= data_count + 1'd1;
 			end else if (sck_fallingedge && data_ready) begin
 				// Counter overflow, prepare for another data packet
 				// Reset counters
@@ -70,7 +70,7 @@ module soft_spi_slave
 			addr_ready <= 0;
 			// Reset registers
 			addr <= 0;
-		end else if(~ncs) begin
+		end else begin
 			if(sck_risingedge) begin
 				// Check the R/W bit
 				if (data_count == 0)
@@ -100,7 +100,7 @@ module soft_spi_slave
 			data_ready <= 0;
 			// Reset registers
 			data_out <= 0;
-		end else if(~ncs) begin
+		end else begin
 			if(sck_risingedge) begin
 				// Check when the entire message is received
 				if (data_count == (msg_width) - 1) begin
@@ -124,19 +124,21 @@ module soft_spi_slave
 			so <= 0;
 			// Reset counters
 			data_out_count <= 0;
-		end else if(~ncs && sck_fallingedge) begin
-			// Counter overflow, prepare for another data packet
-			if (data_ready) begin
-				// Reset outputs
-				so <= 0;
-				// Reset counters
-				data_out_count <= 0;
-			end
-			
-			// Shift out the outgoing data
-			if (addr_ready && (data_out_count < data_width)) begin
-				so <= data_in[data_width - 1 - data_out_count];
-				data_out_count <= data_out_count + 1;
+		end else begin
+			if (sck_fallingedge) begin
+				// Counter overflow, prepare for another data packet
+				if (data_ready) begin
+					// Reset outputs
+					so <= 0;
+					// Reset counters
+					data_out_count <= 0;
+				end else if (addr_ready) begin
+					// Shift out the outgoing data
+					if (data_out_count < data_width) begin
+						so <= data_in[data_width - 1 - data_out_count];
+						data_out_count <= data_out_count + 1;
+					end
+				end
 			end
 		end
 	end

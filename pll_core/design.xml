@@ -12,10 +12,10 @@
                     <ipxact:configurableElementValue referenceId="num_outputs">2</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="msg">Configuration Successful</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="in_clk">40.0</ipxact:configurableElementValue>
-                    <ipxact:configurableElementValue referenceId="DIVR">3</ipxact:configurableElementValue>
-                    <ipxact:configurableElementValue referenceId="FILTER_RANGE">1</ipxact:configurableElementValue>
+                    <ipxact:configurableElementValue referenceId="DIVR">0</ipxact:configurableElementValue>
+                    <ipxact:configurableElementValue referenceId="FILTER_RANGE">3</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="FREQUENCY_PIN_REFERENCECLK">40.0</ipxact:configurableElementValue>
-                    <ipxact:configurableElementValue referenceId="FEEDBACK_PATH">DELAY</ipxact:configurableElementValue>
+                    <ipxact:configurableElementValue referenceId="FEEDBACK_PATH">SIMPLE</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="extdiv_en">False</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="extdiv_port_sel">Port A</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="extdiv">1</ipxact:configurableElementValue>
@@ -34,12 +34,12 @@
                     <ipxact:configurableElementValue referenceId="fclkopA">250.0</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="fclkopB">125.0</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="fclkop_actual">250.0</ipxact:configurableElementValue>
-                    <ipxact:configurableElementValue referenceId="fclkop_tolerance">0.0</ipxact:configurableElementValue>
+                    <ipxact:configurableElementValue referenceId="fclkop_tolerance">5.0</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="fclkop_actual_deviation">0.0</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="DELAY_ADJUSTMENT_MODE_RELATIVE">FIXED</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="FDA_RELATIVE">0</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="DIVQ">2</ipxact:configurableElementValue>
-                    <ipxact:configurableElementValue referenceId="enable_lock">False</ipxact:configurableElementValue>
+                    <ipxact:configurableElementValue referenceId="enable_lock">True</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="enable_bypass">False</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="ENABLE_ICEGATE_PORTA">False</ipxact:configurableElementValue>
                     <ipxact:configurableElementValue referenceId="ENABLE_ICEGATE_PORTB">False</ipxact:configurableElementValue>
@@ -99,9 +99,9 @@
         </ipxact:adHocConnection>
         <ipxact:adHocConnection>
             <ipxact:name>pll_core.lock_o</ipxact:name>
-            <ipxact:tiedValue>open</ipxact:tiedValue>
             <ipxact:portReferences>
                 <ipxact:internalPortReference componentRef="pll_core" portRef="lock_o"/>
+                <ipxact:externalPortReference portRef="lock_o"/>
             </ipxact:portReferences>
         </ipxact:adHocConnection>
         <ipxact:adHocConnection>

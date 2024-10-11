@@ -1,0 +1,24 @@
+ldc_set_location -site {35} [get_ports sys_clk]
+ldc_set_location -site {37} [get_ports adc_clk]
+ldc_set_port -iobuf {IO_TYPE=LVCMOS18 DRIVE=NA PULLMODE=100K} [get_ports sys_clk]
+ldc_set_port -iobuf {IO_TYPE=LVCMOS18 PULLMODE=100K DRIVE=NA} [get_ports rst]
+ldc_set_port -iobuf {IO_TYPE=LVCMOS18 PULLMODE=NA DRIVE=4} [get_ports adc_clk]
+ldc_set_port -iobuf {IO_TYPE=LVCMOS18 PULLMODE=NA DRIVE=4} [get_ports so]
+ldc_set_location -site {17} [get_ports so]
+ldc_set_location -site {20} [get_ports rst]
+ldc_set_vcc -bank 0 -derate 0
+ldc_set_vcc -bank 1 -derate 0
+ldc_set_vcc -bank 2 -derate 0
+ldc_set_vcc -bank 0 1.8
+ldc_set_vcc -bank 1 1.8
+ldc_set_vcc -bank 2 1.8
+ldc_set_vcc -core -derate 0
+ldc_set_vcc -core 1.14
+ldc_set_location -site {14} [get_ports si]
+ldc_set_location -site {15} [get_ports sck]
+ldc_set_location -site {18} [get_ports ncs]
+ldc_set_port -iobuf {IO_TYPE=LVCMOS18 PULLMODE=100K DRIVE=NA} [get_ports ncs]
+ldc_set_port -iobuf {IO_TYPE=LVCMOS18 PULLMODE=100K DRIVE=NA} [get_ports sck]
+ldc_set_port -iobuf {IO_TYPE=LVCMOS18 PULLMODE=100K DRIVE=NA} [get_ports si]
+ldc_set_port -iobuf {IO_TYPE=LVCMOS18 DRIVE=4 PULLMODE=NA} [get_ports meas_done]
+ldc_set_location -site {45} [get_ports meas_done]

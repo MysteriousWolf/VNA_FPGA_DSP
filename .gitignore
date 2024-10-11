@@ -19,6 +19,7 @@ promote.xml
 *.bak
 *.swp
 *.backup
+*.bkp
 *~
 
 # OS generated files
@@ -46,6 +47,7 @@ Thumbs.db
 
 # Simulation files
 /simulation/*
+/core_sim/*
 
 # Make sure to keep the source folders
 !/source/

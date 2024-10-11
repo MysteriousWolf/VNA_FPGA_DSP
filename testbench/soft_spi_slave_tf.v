@@ -18,7 +18,7 @@
 module soft_spi_slave_tf();
 	
 	// Parameters
-    parameter CLK_PERIOD = 4; // Clock period in ns (250 MHz)
+	parameter CLK_PERIOD = 4; // Clock period in ns (250 MHz)
 	parameter SCK_CYC = 40;
     parameter SCK_PERIOD = CLK_PERIOD*SCK_CYC; // SCK period in clock periods
 
