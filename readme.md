@@ -18,3 +18,7 @@ In case config gets corrupted, here is a screenshot of all the relevant settings
 In words: Target Memory`External SPI Flash Memmory (SPI FLASH)` Vendor: `ISSI`, Device: `IS25WP032D`, Package: `208mil 8-pin SOIC`.
 
 The rest can be left on defaults.
+
+## Documentation
+### SPI registry maps  
+You can find the registry maps [here](resources/registry_map.md).
