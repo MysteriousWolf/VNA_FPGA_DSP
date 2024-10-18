@@ -1,0 +1,5 @@
+set CLKA_PERIOD 10
+set CLKB_PERIOD 10
+
+create_clock -name {wr_clk_i} -period $CLKA_PERIOD [get_ports wr_clk_i]
+create_clock -name {rd_clk_i} -period $CLKB_PERIOD [get_ports rd_clk_i]

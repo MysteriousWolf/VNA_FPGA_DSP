@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
-<RadiantModule architecture="iCE40UP" date="2024 10 10 14:54:09" device="iCE40UP5K" gen_platform="Radiant" generator="ipgen" library="module" module="pll" name="pll_core" package="SG48" source_format="Verilog" speed="High-Performance_1.2V" vendor="latticesemi.com" version="1.0.1">
+<RadiantModule architecture="iCE40UP" date="2024 10 18 21:12:37" device="iCE40UP5K" gen_platform="Radiant" generator="ipgen" library="module" module="pll" name="pll_core" package="SG48" source_format="Verilog" speed="High-Performance_1.2V" vendor="latticesemi.com" version="1.0.1">
  <Package>
-  <File modified="2024 10 10 14:54:09" name="rtl/pll_core_bb.v" type="black_box_verilog"/>
-  <File modified="2024 10 10 14:54:09" name="pll_core.cfg" type="cfg"/>
-  <File modified="2024 10 10 14:54:09" name="misc/pll_core_tmpl.v" type="template_verilog"/>
-  <File modified="2024 10 10 14:54:09" name="misc/pll_core_tmpl.vhd" type="template_vhdl"/>
-  <File modified="2024 10 10 14:54:09" name="rtl/pll_core.v" type="top_level_verilog"/>
-  <File modified="2024 10 10 14:54:09" name="component.xml" type="IP-XACT_component"/>
-  <File modified="2024 10 10 14:54:09" name="design.xml" type="IP-XACT_design"/>
+  <File modified="2024 10 18 21:12:37" name="rtl/pll_core_bb.v" type="black_box_verilog"/>
+  <File modified="2024 10 18 21:12:37" name="pll_core.cfg" type="cfg"/>
+  <File modified="2024 10 18 21:12:37" name="misc/pll_core_tmpl.v" type="template_verilog"/>
+  <File modified="2024 10 18 21:12:37" name="misc/pll_core_tmpl.vhd" type="template_vhdl"/>
+  <File modified="2024 10 18 21:12:37" name="rtl/pll_core.v" type="top_level_verilog"/>
+  <File modified="2024 10 18 21:12:37" name="component.xml" type="IP-XACT_component"/>
+  <File modified="2024 10 18 21:12:37" name="design.xml" type="IP-XACT_design"/>
  </Package>
 </RadiantModule>
