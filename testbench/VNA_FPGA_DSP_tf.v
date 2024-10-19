@@ -14,81 +14,35 @@
 
 `timescale 1 ns / 1 ps
 
-/*module pll_core (
-    input ref_clk_i,        // Reference clock input (ignored for this test)
-    input rst_n_i,          // Reset signal, active low
-    output reg outcore_o,   // Configurable frequency clock output
-    output reg outglobal_o, // Global version of the clock output (mirrors outcore_o)
-    output reg outcoreb_o,  // Half frequency clock output
-    output reg outglobalb_o // Global version of the half frequency output (mirrors outcoreb_o)
-);
-
-    // Configurable clock frequency parameters (in MHz)
-    parameter FREQ_CORE = 250;       // Frequency for outcore_o (default 250 MHz)
-    parameter FREQ_COREB = 125;      // Frequency for outcoreb_o (default 125 MHz)
-    
-    // Convert frequencies to time period in nanoseconds
-    localparam real PERIOD_CORE_NS = 1000.0 / FREQ_CORE;       // Period for outcore_o in ns
-    localparam real HALF_PERIOD_CORE_NS = PERIOD_CORE_NS / 2;  // Half-period for outcore_o in ns
-    localparam real PERIOD_COREB_NS = 1000.0 / FREQ_COREB;     // Period for outcoreb_o in ns
-    localparam real HALF_PERIOD_COREB_NS = PERIOD_COREB_NS / 2; // Half-period for outcoreb_o in ns
-
-    // Clock generation for outcore_o and outglobal_o (250 MHz)
-    initial begin
-		outcore_o = 0;
-		outglobal_o = 0;
-		forever begin
-			if (rst_n_i == 0) begin
-				outcore_o = 0;
-				outglobal_o = 0;
-				#(PERIOD_CORE_NS);  // Wait for one full clock period after reset
-			end else begin
-				outcore_o = ~outcore_o;      // Toggle outcore_o
-				outglobal_o = outcore_o;     // Global mirrors outcore_o
-				#(HALF_PERIOD_CORE_NS);      // Wait for half a clock period
-			end
-		end
-    end
-
-    // Clock generation for outcoreb_o and outglobalb_o (125 MHz)
-    initial begin
-		outcoreb_o = 0;
-		outglobalb_o = 0;
-		forever begin
-			if (rst_n_i == 0) begin
-				outcoreb_o = 0;
-				outglobalb_o = 0;
-				#(PERIOD_COREB_NS);  // Wait for one full clock period after reset
-			end else begin
-				outcoreb_o = ~outcoreb_o;    // Toggle outcoreb_o
-				outglobalb_o = outcoreb_o;   // Global mirrors outcoreb_o
-				#(HALF_PERIOD_COREB_NS);     // Wait for half a clock period
-			end
-		end
-    end
-endmodule*/
-
 // Define Module for Test Fixture
 module dsp_core_tf();
 	
 	// Parameters
 	parameter PRE_ST_DELAY = 10;
 	parameter PLL_LOCK_DELAY = 10;
+	parameter ADC_DELAY = 7.5; // Worst case from the datasheet
 	parameter HS_PERIOD = 1000/250;
-	parameter MS_PERIOD = 1000/125;
+	parameter MS_PERIOD = HS_PERIOD*2;
+	parameter LS_PERIOD = MS_PERIOD*2;
 	parameter CLK_PERIOD = 4; // Clock period in ns (250 MHz)
 	parameter SCK_CYC = 50;
     parameter SCK_PERIOD = CLK_PERIOD*SCK_CYC; // SCK period in clock periods
+	
+	localparam DSP_CONV_STAT_CONV_DONE = 16'h2000; // 1 << 13
+	localparam DSP_CONV_STAT_POINT_CNT_MASK = 16'h1FFF;
 
 // Inputs
     reg hs_clk;
     reg ms_clk;
+	reg adc_conv_clk;
     reg lock;
     reg clk;
     reg rst;
     reg sck;
     reg ncs;
     reg si;
+	reg [11:0] adc_a = 0;
+	reg [11:0] adc_b = 0;
 
 
 // Outputs
@@ -112,7 +66,10 @@ module dsp_core_tf();
         .so(so), 
         .si(si), 
         .meas_done(meas_done), 
-        .adc_clk(adc_clk)
+        .adc_clk(adc_clk),
+		.adc_conv_clk(adc_conv_clk),
+		.adc_a(adc_a),
+		.adc_b(adc_b)
     );
 
 	// Clock generation
@@ -137,6 +94,20 @@ module dsp_core_tf();
         forever #(MS_PERIOD / 2) ms_clk = ~ms_clk; // Toggle clock every half period
     end
 	
+    initial begin
+        adc_conv_clk = 0;
+		#(0.5)
+		#(PRE_ST_DELAY)
+		#(ADC_DELAY)
+        forever #(LS_PERIOD / 2) begin
+			adc_conv_clk = ~adc_conv_clk; // Toggle clock every half period
+			if (~adc_conv_clk) begin
+				adc_a = adc_a + 1;
+				adc_b = adc_b + 1;
+			end
+		end
+    end
+	
 	// SCK generation
     initial begin
         sck = 0;
@@ -145,174 +116,185 @@ module dsp_core_tf();
         forever #(SCK_PERIOD / 2) sck = ~sck; // Toggle sck every half period
     end
 
-
 // Initialize Inputs
 // You can add your stimulus here
-initial begin
-	// Simulate a moment of the undefined state of FPGA
-    rst = 0; // No reset signal (like we have irl)
-	lock = 0;
-	#(PRE_ST_DELAY) // Before the PLL locks
-    ncs = 1; // Chip not selected at the beginning
-    si = 0;
-	#(PLL_LOCK_DELAY)
-	lock = 1;
 
-    forever begin
-        // Release reset after some cycles
-        #(2 * SCK_PERIOD); 
-        rst = 0;
-        
-        // First packet
-        #(SCK_PERIOD); // Data changes on clock falling edges
+// Task to send address and data (similar to send_DSP in C)
+task send_DSP;
+    input [6:0] addr;    // 7-bit address
+    input [23:0] data;   // 24-bit data
+    integer i, j;
+    begin
+        // Activate chip select
         ncs = 0;
 
-        // Send read command (1 bit read, 7 bits address: 0b1111111)
-        si = 1; // Read bit
-        #SCK_PERIOD;
-        si = 1; // Address bit 6
-        #SCK_PERIOD;
-        si = 1; // Address bit 5
-        #SCK_PERIOD;
-        si = 1; // Address bit 4
-        #SCK_PERIOD;
-        si = 1; // Address bit 3
-        #SCK_PERIOD;
-        si = 1; // Address bit 2
-        #SCK_PERIOD;
-        si = 1; // Address bit 1
-        #SCK_PERIOD;
-        si = 1; // Address bit 0
+        // Send address (including the read/write bit)
+        si = 0; // Read bit (0 for write command)
         #SCK_PERIOD;
 
-        // Send 24-bit data: 0xFA9C34 (11111010 10011100 00110100)
-        si = 1; // MSB of data (bit 23)
-        #SCK_PERIOD;
-        si = 1; // bit 22
-        #SCK_PERIOD;
-        si = 1; // bit 21
-        #SCK_PERIOD;
-        si = 1; // bit 20
-        #SCK_PERIOD;
-        si = 1; // bit 19
-        #SCK_PERIOD;
-        si = 0; // bit 18
-        #SCK_PERIOD;
-        si = 1; // bit 17
-        #SCK_PERIOD;
-        si = 0; // bit 16
-        #SCK_PERIOD;
-        si = 1; // bit 15
-        #SCK_PERIOD;
-        si = 0; // bit 14
-        #SCK_PERIOD;
-        si = 0; // bit 13
-        #SCK_PERIOD;
-        si = 1; // bit 12
-        #SCK_PERIOD;
-        si = 1; // bit 11
-        #SCK_PERIOD;
-        si = 1; // bit 10
-        #SCK_PERIOD;
-        si = 0; // bit 9
-        #SCK_PERIOD;
-        si = 0; // bit 8
-        #SCK_PERIOD;
-        si = 0; // bit 7
-        #SCK_PERIOD;
-        si = 0; // bit 6
-        #SCK_PERIOD;
-        si = 1; // bit 5
-        #SCK_PERIOD;
-        si = 1; // bit 4
-        #SCK_PERIOD;
-        si = 0; // bit 3
-        #SCK_PERIOD;
-        si = 1; // bit 2
-        #SCK_PERIOD;
-        si = 0; // bit 1
-        #SCK_PERIOD;
-        si = 0; // bit 0 (LSB)
-        #SCK_PERIOD;
+        // Loop through the 7 address bits (MSB first)
+        for (i = 6; i >= 0; i = i - 1) begin
+            si = addr[i];  // Set `si` to the corresponding bit of the address
+            #SCK_PERIOD;   // Wait for a clock period for each bit
+        end
 
-        // Second packet (addr = 0b1100110, data = 0xFA9C34)
+        // Send 24-bit data
+        for (j = 23; j >= 0; j = j - 1) begin
+            si = data[j];  // Set `si` to the corresponding bit of the data
+            #SCK_PERIOD;   // Wait for a clock period for each bit
+        end
 
-        // Send read command (1 bit read, 7 bits address: 0b1100110)
-        si = 1; // Read bit
-        #SCK_PERIOD;
-        si = 1; // Address bit 6
-        #SCK_PERIOD;
-        si = 1; // Address bit 5
-        #SCK_PERIOD;
-        si = 0; // Address bit 4
-        #SCK_PERIOD;
-        si = 0; // Address bit 3
-        #SCK_PERIOD;
-        si = 1; // Address bit 2
-        #SCK_PERIOD;
-        si = 1; // Address bit 1
-        #SCK_PERIOD;
-        si = 0; // Address bit 0
-        #SCK_PERIOD;
-
-        // Send 24-bit data: 0xFA9C34 (11111010 10011100 00110100)
-        si = 1; // MSB of data (bit 23)
-        #SCK_PERIOD;
-        si = 1; // bit 22
-        #SCK_PERIOD;
-        si = 1; // bit 21
-        #SCK_PERIOD;
-        si = 1; // bit 20
-        #SCK_PERIOD;
-        si = 1; // bit 19
-        #SCK_PERIOD;
-        si = 0; // bit 18
-        #SCK_PERIOD;
-        si = 1; // bit 17
-        #SCK_PERIOD;
-        si = 0; // bit 16
-        #SCK_PERIOD;
-        si = 1; // bit 15
-        #SCK_PERIOD;
-        si = 0; // bit 14
-        #SCK_PERIOD;
-        si = 0; // bit 13
-        #SCK_PERIOD;
-        si = 1; // bit 12
-        #SCK_PERIOD;
-        si = 1; // bit 11
-        #SCK_PERIOD;
-        si = 1; // bit 10
-        #SCK_PERIOD;
-        si = 0; // bit 9
-        #SCK_PERIOD;
-        si = 0; // bit 8
-        #SCK_PERIOD;
-        si = 0; // bit 7
-        #SCK_PERIOD;
-        si = 0; // bit 6
-        #SCK_PERIOD;
-        si = 1; // bit 5
-        #SCK_PERIOD;
-        si = 1; // bit 4
-        #SCK_PERIOD;
-        si = 0; // bit 3
-        #SCK_PERIOD;
-        si = 1; // bit 2
-        #SCK_PERIOD;
-        si = 0; // bit 1
-        #SCK_PERIOD;
-        si = 0; // bit 0 (LSB)
-        #SCK_PERIOD;
-
+        // Deactivate chip select
         #(SCK_PERIOD / 2);
         ncs = 1;
+		
+		// Wait a bit
+        #(10*SCK_PERIOD);
+    end
+endtask
+
+// Task to read from DSP (similar to read_DSP in C)
+task read_DSP;
+    input [6:0] addr;    // 7-bit address
+    output [23:0] data;  // 24-bit data (output)
+    integer i, j;
+    begin
+        // Activate chip select
+        ncs = 0;
+
+        // Send address (read command and 7-bit address)
+        si = 1; // Read bit
+        #SCK_PERIOD;
+
+        // Loop through the 7 address bits (MSB first)
+        for (i = 6; i >= 0; i = i - 1) begin
+            si = addr[i];  // Set `si` to the corresponding bit of the address
+            #SCK_PERIOD;   // Wait for a clock period for each bit
+        end
+		
+        si = 0; // Read bit
+
+        // Receive 24-bit data (assuming data is coming on `si`)
+        for (j = 23; j >= 0; j = j - 1) begin
+            #(SCK_PERIOD/2);  // Wait for a clock period to latch data
+            data[j] = so; // Capture the data from SPI output
+            #(SCK_PERIOD/2);  // Wait for a clock period to latch data
+        end
+
+        // Deactivate chip select
+        #(SCK_PERIOD / 2);
+        ncs = 1;
+		
+        #(10*SCK_PERIOD);
+		
+		// Wait a bit
+        #(10*SCK_PERIOD);
+    end
+endtask
+
+// Task to monitor DSP conversion
+task monitor_dsp_conversion;
+    input integer max_wait_cycles;
+    output conversion_success;
+    output [12:0] final_point_count;
+
+    reg [23:0] rx_data;
+    reg [12:0] point_count;
+    integer wait_cycles;
+
+    begin
+        conversion_success = 0; // Initialize output (0 = not done)
+
+        for (wait_cycles = 0; wait_cycles < max_wait_cycles; wait_cycles = wait_cycles + 1) begin
+            // Read DSP status
+            read_DSP(7'b0000011, rx_data);
+            
+            // Extract point count
+            point_count = rx_data & DSP_CONV_STAT_POINT_CNT_MASK;
+            
+            // Check if conversion is done
+            if (rx_data & DSP_CONV_STAT_CONV_DONE) begin
+                conversion_success = 1; // Set output (1 = done)
+                final_point_count = point_count;
+                $display("Conversion done. Final point count: %d", point_count);
+                disable monitor_dsp_conversion;
+            end
+            
+            if ((wait_cycles % 10) == 0) begin // Display every 10 cycles
+                $display("Waiting for conversion. Current point count: %d", point_count);
+            end
+            
+            #10; // Wait for 10 time units (adjust as needed for your testbench timing)
+        end
+
+        $display("Timeout: Conversion did not complete within %d cycles.", max_wait_cycles);
+        final_point_count = point_count; // Return the last observed point count
+        conversion_success = 0; // Conversion not complete (timeout)
+    end
+endtask
+
+reg [23:0] rx_data;
+
+reg [12:0] final_count;
+reg conversion_success;
+
+initial begin
+    rst = 0; // No reset signal (like we have irl)
+    lock = 0;
+    #(PRE_ST_DELAY) // Before the PLL locks
+    ncs = 1; // Chip not selected at the beginning
+    si = 0;
+    #(PLL_LOCK_DELAY)
+    lock = 1;
+
+    forever begin
+        #(2 * SCK_PERIOD);
+        rst = 0;
+
+		// Read the PLL lock bit to make sure we are reading correctly
+        read_DSP(7'b0000001, rx_data);
+		
+		// Read device ID
+        read_DSP(7'b0111111, rx_data);
+		
+        // Send configuration to 4 points
+        send_DSP(7'b0000010, 24'h000004);
+		
+        // Start conversion (questionable?)
+        send_DSP(7'b0000010, 24'h002004);
+		
+		// Wait for the measurement
+		monitor_dsp_conversion(5, conversion_success, final_count);
+
+		if (conversion_success) begin
+			$display("Conversion completed successfully. Final count: %d", final_count);
+		end else begin
+			$display("Conversion failed or timed out. Last count: %d", final_count);
+		end
+			
+		// Restart readout
+		send_DSP(7'b0000100, 24'h000001);
+		
+		// Read the next point
+		read_DSP(7'b0000100, rx_data);
+		read_DSP(7'b0000101, rx_data);
+		
+		// Read the next point
+		read_DSP(7'b0000100, rx_data);
+		read_DSP(7'b0000101, rx_data);
+		
+		// Read the next point
+		read_DSP(7'b0000100, rx_data);
+		read_DSP(7'b0000101, rx_data);
+		
+		// Read the next point
+		read_DSP(7'b0000100, rx_data);
+		read_DSP(7'b0000101, rx_data); // This one should report that we are done on bit 13
 
         // Trigger reset after some cycles
-        #(10 * CLK_PERIOD); 
+        #(10 * CLK_PERIOD);
         rst = 1;
     end
 end
-
 
 endmodule // dsp_core_tf

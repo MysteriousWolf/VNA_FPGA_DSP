@@ -1,14 +1,14 @@
 module dsp_core
 #(
 	parameter adc_width = 12,
-	parameter device_ID = 24'b111100001100110010101011, // test pattern by default, change to real ID in project settings
+	parameter device_ID = 24'b111100001100110010101011, // test pattern by default, change to real ID in project settings (F0CCAB)
 	parameter rst_cycles = 4,
 	parameter max_meas_points = 4096,
 	localparam rst_cyc_cnt = $clog2(rst_cycles),
 	localparam max_meas_pnt_cnt = $clog2(max_meas_points)
 )
 (
-	// For testing
+	// For testing (comment out PLL and same name signals)
 	//input hs_clk,
 	//input ms_clk,
 	//input pll_lock,
@@ -33,7 +33,6 @@ module dsp_core
 	input [adc_width-1:0] adc_b
 );
 	// Wires and registry
-	//wire global_rst = ~rst;
 	reg global_rst;
 	reg [rst_cyc_cnt-1:0] g_rst_c;
 	wire pll_lock;
@@ -68,6 +67,7 @@ module dsp_core
 	wire readout_clk = ls_clk;
 	reg readout_start;
 	reg [max_meas_pnt_cnt:0] meas_cnt_spi;
+	wire readout_done = meas_cnt_spi >= max_meas_cnt_adc;
 	
 	pll_core PLL(
 		.ref_clk_i(sys_clk),
@@ -110,12 +110,12 @@ module dsp_core
         .rd_clk_en_i(1'b1),
 		
 		.wr_clk_i(~adc_conv_clk),
-        .wr_en_i(conversion_start),
+        .wr_en_i(~conversion_done),
         .wr_addr_i(meas_cnt_adc[max_meas_pnt_cnt-1:0]),
         .wr_data_i(adc_ab),
 		
         .rd_clk_i(readout_clk),
-        .rd_en_i(readout_start),
+        .rd_en_i(~readout_done),
         .rd_addr_i(meas_cnt_spi[max_meas_pnt_cnt-1:0]),
         .rd_data_o(spi_ab)
 	);
@@ -172,19 +172,27 @@ module dsp_core
 			data_rdy_rising_ddd <= 1'b0;
 		end else begin
 			data_rdy_r <= {data_rdy_r[0], spi_data_rdy};
-			data_rdy_rising_d <= addr_rdy_rising;
+			data_rdy_rising_d <= data_rdy_rising;
 			data_rdy_rising_dd <= data_rdy_rising_d;
 			data_rdy_rising_ddd <= data_rdy_rising_dd;
 		end
 	end
 	
+	reg delayed_conversion;
+	
 	// Temporarly store measured data
-	/*always @(posedge adc_conv_clk) begin
-		if (global_rst)
-			adc_ab_reg <= 24'b0;
-		else
-			adc_ab_reg <= adc_ab;
-	end*/
+	always @(negedge adc_conv_clk) begin
+		if (global_rst || conversion_start) begin
+			delayed_conversion <= 0;
+			meas_cnt_adc <= 0;
+		end else begin
+			if (!conversion_done && delayed_conversion) begin
+				meas_cnt_adc <= meas_cnt_adc + 1;
+			end
+			
+			delayed_conversion <= 1;
+		end
+	end
 	
 	// Detect conversion clock edges
     reg [1:0] conv_clk_r;
@@ -231,8 +239,8 @@ module dsp_core
 			// RAM control registry
 			conversion_start <= 0;
 			max_meas_cnt_adc <= max_meas_points;
-			conversion_clk <= 0;
-			meas_cnt_adc <= 0;
+			//conversion_clk <= 0;
+			//meas_cnt_adc <= 0;
 			
 			//readout_clk <= 0;
 			readout_start <= 0;
@@ -242,14 +250,14 @@ module dsp_core
 			g_rst_c <= g_rst_c + 1;
 		end else begin
 			// ADC -> RAM readout
-			if (conversion_start && ~conversion_done) begin
+			/*if (conversion_start && ~conversion_done) begin
 				if (conv_clk_rising) begin
 					conversion_clk <= 1;
 				end else if (conv_clk_falling) begin
 					conversion_clk <= 0;
 					meas_cnt_adc <= meas_cnt_adc + 1;
 				end
-			end
+			end*/
 		
 			/* SPI handling */
 			// Adress handling and data reading (if RST got triggered, ignore this part of the logic)
@@ -310,7 +318,7 @@ module dsp_core
 							max_meas_cnt_adc <= max_meas_points;
 							
 						if (spi_data[13]) begin
-							meas_cnt_adc <= 0;
+							//meas_cnt_adc <= 0;
 							conversion_start <= 1;
 						end
 					end else if (spi_addr == 7'b0000100) begin
@@ -322,6 +330,11 @@ module dsp_core
 						meas_cnt_spi <= spi_data[12:0];
 					end
 				end
+			end
+			
+			// Lower the conversion_start bit
+			if (data_rdy_rising_dd) begin
+				conversion_start <= 0;
 			end
 			
 			// After SPI is done, read the next sample (2 clock cycles just in case)
