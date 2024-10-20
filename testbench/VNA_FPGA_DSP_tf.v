@@ -25,7 +25,7 @@ module dsp_core_tf();
 	parameter MS_PERIOD = HS_PERIOD*2;
 	parameter LS_PERIOD = MS_PERIOD*2;
 	parameter CLK_PERIOD = 4; // Clock period in ns (250 MHz)
-	parameter SCK_CYC = 50;
+	parameter SCK_CYC = 100;
     parameter SCK_PERIOD = CLK_PERIOD*SCK_CYC; // SCK period in clock periods
 	
 	localparam DSP_CONV_STAT_CONV_DONE = 16'h2000; // 1 << 13
@@ -55,7 +55,9 @@ module dsp_core_tf();
 
 // Instantiate the UUT
 // Please check and add your parameters manually
-    dsp_core UUT (
+    dsp_core #(
+		.meas_points(4)
+	) UUT (
 		.hs_clk(hs_clk),
 		.ms_clk(ms_clk),
 		.pll_lock(lock),
@@ -185,8 +187,6 @@ task read_DSP;
         #(SCK_PERIOD / 2);
         ncs = 1;
 		
-        #(10*SCK_PERIOD);
-		
 		// Wait a bit
         #(10*SCK_PERIOD);
     end
@@ -224,7 +224,7 @@ task monitor_dsp_conversion;
                 $display("Waiting for conversion. Current point count: %d", point_count);
             end
             
-            #10; // Wait for 10 time units (adjust as needed for your testbench timing)
+            #SCK_PERIOD; // Wait for 10 time units
         end
 
         $display("Timeout: Conversion did not complete within %d cycles.", max_wait_cycles);
@@ -257,14 +257,45 @@ initial begin
 		// Read device ID
         read_DSP(7'b0111111, rx_data);
 		
-        // Send configuration to 4 points
-        send_DSP(7'b0000010, 24'h000004);
-		
-        // Start conversion (questionable?)
+        // Start conversion
         send_DSP(7'b0000010, 24'h002004);
 		
 		// Wait for the measurement
-		monitor_dsp_conversion(5, conversion_success, final_count);
+		monitor_dsp_conversion(10, conversion_success, final_count);
+
+		if (conversion_success) begin
+			$display("Conversion completed successfully. Final count: %d", final_count);
+		end else begin
+			$display("Conversion failed or timed out. Last count: %d", final_count);
+		end
+			
+		// Restart readout
+		send_DSP(7'b0000100, 24'h000001);
+		
+		// Read the next point
+		read_DSP(7'b0000100, rx_data);
+		read_DSP(7'b0000101, rx_data);
+		
+		// Read the next point
+		read_DSP(7'b0000100, rx_data);
+		read_DSP(7'b0000101, rx_data);
+		
+		// Read the next point
+		read_DSP(7'b0000100, rx_data);
+		read_DSP(7'b0000101, rx_data);
+		
+		// Read the next point
+		read_DSP(7'b0000100, rx_data);
+		read_DSP(7'b0000101, rx_data); // This one should report that we are done on bit 13
+
+        // Wait a bit to test consecutive reads
+        #(2*SCK_PERIOD);
+		
+		// Start conversion
+        send_DSP(7'b0000010, 24'h002004);
+		
+		// Wait for the measurement
+		monitor_dsp_conversion(10, conversion_success, final_count);
 
 		if (conversion_success) begin
 			$display("Conversion completed successfully. Final count: %d", final_count);
@@ -292,7 +323,7 @@ initial begin
 		read_DSP(7'b0000101, rx_data); // This one should report that we are done on bit 13
 
         // Trigger reset after some cycles
-        #(10 * CLK_PERIOD);
+        #(2*SCK_PERIOD);
         rst = 1;
     end
 end

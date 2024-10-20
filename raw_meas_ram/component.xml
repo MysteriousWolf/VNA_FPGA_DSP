@@ -169,6 +169,10 @@
                 <ipxact:fileType user="dependency_file">user</ipxact:fileType>
             </ipxact:file>
             <ipxact:file>
+                <ipxact:name>component.xml</ipxact:name>
+                <ipxact:fileType user="IP-XACT_component">user</ipxact:fileType>
+            </ipxact:file>
+            <ipxact:file>
                 <ipxact:name>design.xml</ipxact:name>
                 <ipxact:fileType user="IP-XACT_design">user</ipxact:fileType>
             </ipxact:file>
@@ -200,7 +204,7 @@
         </lsccip:deviceInfo>
         <lsccip:generationInfo>
             <lsccip:fileVersion>20180929</lsccip:fileVersion>
-            <lsccip:createdTimestamp>2024 10 18 16:45:39</lsccip:createdTimestamp>
+            <lsccip:createdTimestamp>2024 10 20 19:33:15</lsccip:createdTimestamp>
             <lsccip:radiantBuild>&quot;Lattice Radiant Software&quot; (64-bit) 2023.2.1.288.0</lsccip:radiantBuild>
         </lsccip:generationInfo>
     </ipxact:vendorExtensions>
