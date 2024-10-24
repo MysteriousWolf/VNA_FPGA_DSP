@@ -1,0 +1,24 @@
+C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v {1 {vlog -work work -stats=none C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v
+Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
+-- Compiling module soft_spi_slave
+
+Top level modules:
+	soft_spi_slave
+
+} {} {}} C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v {1 {vlog -work work -stats=none C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v
+Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
+-- Compiling module spi_counter
+-- Compiling module spi_counter_ipgen_lscc_cntr
+
+Top level modules:
+	spi_counter
+
+} {} {}} C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/adc_counter/rtl/adc_counter.v {1 {vlog -work work -stats=none C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/adc_counter/rtl/adc_counter.v
+Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
+-- Compiling module adc_counter
+-- Compiling module adc_counter_ipgen_lscc_cntr
+
+Top level modules:
+	adc_counter
+
+} {} {}}

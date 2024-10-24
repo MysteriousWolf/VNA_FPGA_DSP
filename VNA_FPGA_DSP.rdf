@@ -2,7 +2,7 @@
 <RadiantProject version="4.2" radiant="2023.2.1.288.0" title="VNA_FPGA_DSP" device="iCE40UP5K-SG48I" performance_grade="High-Performance_1.2V" default_implementation="impl_1">
     <Options/>
     <Implementation title="impl_1" dir="impl_1" description="impl_1" synthesis="synplify" default_strategy="Strategy1">
-        <Options def_top="dsp_core" top="dsp_core"/>
+        <Options def_top="meas_fifo" top="dsp_core"/>
         <Source name="source/core.v" type="Verilog" type_short="Verilog">
             <Options top_module="dsp_core"/>
         </Source>
@@ -15,7 +15,31 @@
         <Source name="testbench/VNA_FPGA_DSP_tf.v" type="Verilog" type_short="Verilog" syn_sim="SimOnly">
             <Options/>
         </Source>
+        <Source name="raw_meas_ram/raw_meas_ram.ipx" type="IPX_Module" type_short="IPX">
+            <Options/>
+        </Source>
+        <Source name="adc_counter/adc_counter.ipx" type="IPX_Module" type_short="IPX">
+            <Options/>
+        </Source>
+        <Source name="spi_counter/spi_counter.ipx" type="IPX_Module" type_short="IPX">
+            <Options/>
+        </Source>
+        <Source name="source/impl_1/VNA_FPGA_DSP_minimal_tf.v" type="Verilog" type_short="Verilog" syn_sim="SimOnly">
+            <Options/>
+        </Source>
+        <Source name="meas_fifo/meas_fifo.ipx" type="IPX_Module" type_short="IPX">
+            <Options/>
+        </Source>
+        <Source name="meas_fifo_sc/meas_fifo_sc.ipx" type="IPX_Module" type_short="IPX">
+            <Options/>
+        </Source>
         <Source name="core_sim/core_sim.spf" type="Simulation Project File" type_short="SPF">
+            <Options/>
+        </Source>
+        <Source name="core_sim_fifo/core_sim_fifo.spf" type="Simulation Project File" type_short="SPF">
+            <Options/>
+        </Source>
+        <Source name="core_sim_minimal/core_sim_minimal.spf" type="Simulation Project File" type_short="SPF">
             <Options/>
         </Source>
         <Source name="source/impl_1.xcf" type="Programming Project File" type_short="Programming">

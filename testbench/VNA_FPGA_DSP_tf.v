@@ -44,10 +44,11 @@ module dsp_core_tf();
 	reg [11:0] adc_a = 0;
 	reg [11:0] adc_b = 0;
 
+	reg conv_start = 0;
 
 // Outputs
     wire so;
-    wire meas_done;
+    //wire meas_done;
     wire adc_clk;
 
 // Bidirs
@@ -63,11 +64,11 @@ module dsp_core_tf();
 		.pll_lock(lock),
         .sys_clk(clk), 
         .rst(rst), 
-        .sck(sck), 
+        .sck(sck & conv_start), 
         .ncs(ncs), 
         .so(so), 
         .si(si), 
-        .meas_done(meas_done), 
+        //.meas_done(meas_done), 
         .adc_clk(adc_clk),
 		.adc_conv_clk(adc_conv_clk),
 		.adc_a(adc_a),
@@ -131,6 +132,7 @@ task send_DSP;
         ncs = 0;
 
         // Send address (including the read/write bit)
+		conv_start = 1;
         si = 0; // Read bit (0 for write command)
         #SCK_PERIOD;
 
@@ -145,9 +147,11 @@ task send_DSP;
             si = data[j];  // Set `si` to the corresponding bit of the data
             #SCK_PERIOD;   // Wait for a clock period for each bit
         end
+		
+		conv_start = 0;
 
         // Deactivate chip select
-        #(SCK_PERIOD / 2);
+        #(SCK_PERIOD);
         ncs = 1;
 		
 		// Wait a bit
@@ -165,6 +169,7 @@ task read_DSP;
         ncs = 0;
 
         // Send address (read command and 7-bit address)
+		conv_start = 1;
         si = 1; // Read bit
         #SCK_PERIOD;
 
@@ -178,13 +183,14 @@ task read_DSP;
 
         // Receive 24-bit data (assuming data is coming on `si`)
         for (j = 23; j >= 0; j = j - 1) begin
-            #(SCK_PERIOD/2);  // Wait for a clock period to latch data
-            data[j] = so; // Capture the data from SPI output
-            #(SCK_PERIOD/2);  // Wait for a clock period to latch data
+            #(SCK_PERIOD/2);	// Wait to latch data
+            data[j] = so;		// Capture the data from SPI output
+            #(SCK_PERIOD/2);
         end
+		conv_start = 0;
 
         // Deactivate chip select
-        #(SCK_PERIOD / 2);
+        #(SCK_PERIOD);
         ncs = 1;
 		
 		// Wait a bit
@@ -224,7 +230,7 @@ task monitor_dsp_conversion;
                 $display("Waiting for conversion. Current point count: %d", point_count);
             end
             
-            #SCK_PERIOD; // Wait for 10 time units
+            #SCK_PERIOD;
         end
 
         $display("Timeout: Conversion did not complete within %d cycles.", max_wait_cycles);
@@ -254,9 +260,6 @@ initial begin
 		// Read the PLL lock bit to make sure we are reading correctly
         read_DSP(7'b0000001, rx_data);
 		
-		// Read device ID
-        read_DSP(7'b0111111, rx_data);
-		
         // Start conversion
         send_DSP(7'b0000010, 24'h002004);
 		
@@ -264,7 +267,7 @@ initial begin
 		monitor_dsp_conversion(10, conversion_success, final_count);
 
 		if (conversion_success) begin
-			$display("Conversion completed successfully. Final count: %d", final_count);
+			$display("Conversion completed successfully. Final reported count: %d", final_count);
 		end else begin
 			$display("Conversion failed or timed out. Last count: %d", final_count);
 		end

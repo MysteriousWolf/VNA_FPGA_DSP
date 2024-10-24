@@ -1,0 +1,286 @@
+# Reading pref.tcl
+# do C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/core_sim_fifo/core_sim_fifo.mdo
+# Loading project core_sim_fifo
+# Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
+# Start time: 10:46:54 on Oct 24,2024
+# vlog -reportprogress 300 "+incdir+C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source" -work work C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/core.v -suppress 2388 
+# -- Compiling module dsp_core
+# 
+# Top level modules:
+# 	dsp_core
+# End time: 10:46:54 on Oct 24,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
+# Start time: 10:46:54 on Oct 24,2024
+# vlog -reportprogress 300 "+incdir+C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source" -work work C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v -suppress 2388 
+# -- Compiling module soft_spi_slave
+# 
+# Top level modules:
+# 	soft_spi_slave
+# End time: 10:46:54 on Oct 24,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
+# Start time: 10:46:54 on Oct 24,2024
+# vlog -reportprogress 300 "+incdir+C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl" -work work C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v -suppress 2388 
+# -- Compiling module spi_counter
+# -- Compiling module spi_counter_ipgen_lscc_cntr
+# 
+# Top level modules:
+# 	spi_counter
+# End time: 10:46:54 on Oct 24,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
+# Start time: 10:46:54 on Oct 24,2024
+# vlog -reportprogress 300 "+incdir+C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1" -work work C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v -suppress 2388 
+# -- Compiling module meas_fifo
+# -- Compiling module dsp_core_tf
+# 
+# Top level modules:
+# 	meas_fifo
+# 	dsp_core_tf
+# End time: 10:46:54 on Oct 24,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+vsim -gui work.dsp_core_tf
+# vsim -gui work.dsp_core_tf 
+# Start time: 10:47:54 on Oct 24,2024
+# //  ModelSim - Lattice FPGA Edition 2023.3 Jul 18 2023
+# //
+# //  Copyright 1991-2023 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  ModelSim - Lattice FPGA Edition and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading work.dsp_core_tf
+# Loading work.dsp_core
+# Loading work.soft_spi_slave
+# Loading work.spi_counter
+# Loading work.spi_counter_ipgen_lscc_cntr
+# Loading work.meas_fifo
+add wave -position end  sim:/dsp_core_tf/UUT/sck
+add wave -position end  sim:/dsp_core_tf/UUT/ncs
+add wave -position end  sim:/dsp_core_tf/UUT/so
+add wave -position end  sim:/dsp_core_tf/UUT/si
+add wave -position 0  sim:/dsp_core_tf/UUT/global_rst
+add wave -position end  sim:/dsp_core_tf/UUT/spi_rw
+add wave -position end  sim:/dsp_core_tf/UUT/spi_addr_rdy
+add wave -position end  sim:/dsp_core_tf/UUT/spi_addr
+add wave -position end  sim:/dsp_core_tf/UUT/spi_data_rdy
+add wave -position end  sim:/dsp_core_tf/UUT/spi_data
+add wave -position end  sim:/dsp_core_tf/UUT/spi_data_tx
+add wave -position end  sim:/dsp_core_tf/rx_data
+add wave -position end  sim:/dsp_core_tf/UUT/MEAS_FIFO/wr_clk_i
+add wave -position end  sim:/dsp_core_tf/UUT/MEAS_FIFO/rd_clk_i
+add wave -position 15  sim:/dsp_core_tf/UUT/MEAS_FIFO/rst_i
+add wave -position 16  sim:/dsp_core_tf/UUT/MEAS_FIFO/rp_rst_i
+add wave -position 19  sim:/dsp_core_tf/UUT/MEAS_FIFO/wr_en_i
+add wave -position 20  sim:/dsp_core_tf/UUT/MEAS_FIFO/wr_data_i
+add wave -position 17  sim:/dsp_core_tf/UUT/MEAS_FIFO/full_o
+add wave -position 18  sim:/dsp_core_tf/UUT/MEAS_FIFO/empty_o
+add wave -position end  sim:/dsp_core_tf/UUT/MEAS_FIFO/rd_en_i
+add wave -position end  sim:/dsp_core_tf/UUT/MEAS_FIFO/rd_data_o
+add wave -position 14  sim:/dsp_core_tf/UUT/fifo_clear
+add wave -position 15  sim:/dsp_core_tf/UUT/fifo_wr_en
+add wave -position 16  sim:/dsp_core_tf/UUT/fifo_rd_en
+add wave -position 1  sim:/dsp_core_tf/UUT/meas_done
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+run
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.dsp_core_tf
+# Loading work.dsp_core
+# Loading work.soft_spi_slave
+# Loading work.spi_counter
+# Loading work.spi_counter_ipgen_lscc_cntr
+# Loading work.meas_fifo
+# ** Error: (vsim-3043) Unresolved reference to 'write_DSP'.
+#    Time: 0 ps  Iteration: 0  Instance: /dsp_core_tf File: C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v Line: 338
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+vsim -gui work.dsp_core_tf
+# vsim -gui work.dsp_core_tf 
+# Start time: 10:47:54 on Oct 24,2024
+# Loading work.dsp_core_tf
+# Loading work.dsp_core
+# Loading work.soft_spi_slave
+# Loading work.spi_counter
+# Loading work.spi_counter_ipgen_lscc_cntr
+# Loading work.meas_fifo
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.dsp_core_tf
+# Loading work.dsp_core
+# Loading work.soft_spi_slave
+# Loading work.spi_counter
+# Loading work.spi_counter_ipgen_lscc_cntr
+# Loading work.meas_fifo
+run
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.dsp_core_tf
+# Loading work.dsp_core
+# Loading work.soft_spi_slave
+# Loading work.spi_counter
+# Loading work.spi_counter_ipgen_lscc_cntr
+# Loading work.meas_fifo
+run
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.dsp_core_tf
+# Loading work.dsp_core
+# Loading work.soft_spi_slave
+# Loading work.spi_counter
+# Loading work.spi_counter_ipgen_lscc_cntr
+# Loading work.meas_fifo
+run
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.dsp_core_tf
+# Loading work.dsp_core
+# Loading work.soft_spi_slave
+# Loading work.spi_counter
+# Loading work.spi_counter_ipgen_lscc_cntr
+# Loading work.meas_fifo
+run
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.dsp_core_tf
+# Loading work.dsp_core
+# Loading work.soft_spi_slave
+# Loading work.spi_counter
+# Loading work.spi_counter_ipgen_lscc_cntr
+# Loading work.meas_fifo
+run
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.dsp_core_tf
+# Loading work.dsp_core
+# Loading work.soft_spi_slave
+# Loading work.spi_counter
+# Loading work.spi_counter_ipgen_lscc_cntr
+# ** Error: (vsim-3033) Instantiation of 'meas_fifo_sc' failed. The design unit was not found.
+#    Time: 0 ps  Iteration: 0  Instance: /dsp_core_tf/UUT File: C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/core.v Line: 133
+#         Searched libraries:
+#             C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/core_sim_fifo/work
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+vsim -gui work.dsp_core_tf
+# vsim -gui work.dsp_core_tf 
+# Start time: 10:47:54 on Oct 24,2024
+# Loading work.dsp_core_tf
+# Loading work.dsp_core
+# Loading work.soft_spi_slave
+# Loading work.spi_counter
+# Loading work.spi_counter_ipgen_lscc_cntr
+# Loading work.meas_fifo_sc
+# Warning in wave window restart: ** UI-Msg (Warning): (vish-4014) No objects found matching '/dsp_core_tf/UUT/MEAS_FIFO/rp_rst_i'. 
+# Warning in wave window restart: ** UI-Msg (Warning): (vish-4014) No objects found matching '/dsp_core_tf/UUT/MEAS_FIFO/wr_clk_i'. 
+# Warning in wave window restart: ** UI-Msg (Warning): (vish-4014) No objects found matching '/dsp_core_tf/UUT/MEAS_FIFO/rd_clk_i'. 
+add wave -position 15  sim:/dsp_core_tf/UUT/MEAS_FIFO/clk_i
+add wave -position 16  sim:/dsp_core_tf/UUT/MEAS_FIFO/rst_i
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+run
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.dsp_core_tf
+# Loading work.dsp_core
+# Loading work.soft_spi_slave
+# Loading work.spi_counter
+# Loading work.spi_counter_ipgen_lscc_cntr
+# Loading work.meas_fifo_sc
+run
+run
+# Compile of core.v was successful.
+# Compile of spi.v was successful.
+# Compile of spi_counter.v was successful.
+# Compile of VNA_FPGA_DSP_minimal_tf.v was successful.
+# 4 compiles, 0 failed with no errors.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.dsp_core_tf
+# Loading work.dsp_core
+# Loading work.soft_spi_slave
+# Loading work.spi_counter
+# Loading work.spi_counter_ipgen_lscc_cntr
+# Loading work.meas_fifo_sc
+run
+# End time: 17:32:31 on Oct 24,2024, Elapsed time: 6:44:37
+# Errors: 0, Warnings: 1

@@ -1,0 +1,11 @@
+<RadiantSimulationProject stage="0" version="2.0" simType="ModelSim" language="1" name="core_sim_fifo" path=".">
+    <Source langstandard="Verilog 2001" include="none" worklib="work" path="source/core.v" type="VERILOG"/>
+    <Source langstandard="Verilog 2001" include="none" worklib="work" path="source/spi.v" type="VERILOG"/>
+    <Source langstandard="Verilog 2001" include="none" worklib="work" path="spi_counter/rtl/spi_counter.v" type="VERILOG"/>
+    <Source langstandard="Verilog 2001" include="none" worklib="work" path="source/impl_1/VNA_FPGA_DSP_minimal_tf.v" type="VERILOG"/>
+    <SimLib value="pmi_work ovi_ice40up"/>
+    <GlbInc value=""/>
+    <Macro value=""/>
+    <Udo value=""/>
+    <TopModule language="VERILOG" instance="" name="dsp_core_tf"/>
+</RadiantSimulationProject>

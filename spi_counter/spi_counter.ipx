@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<RadiantModule architecture="iCE40UP" date="2024 10 21 12:28:44" device="iCE40UP5K" gen_platform="Radiant" generator="ipgen" library="module" module="counter" name="spi_counter" package="SG48" source_format="Verilog" speed="High-Performance_1.2V" vendor="latticesemi.com" version="2.0.0">
+ <Package>
+  <File modified="2024 10 21 12:28:44" name="rtl/spi_counter_bb.v" type="black_box_verilog"/>
+  <File modified="2024 10 21 12:28:44" name="spi_counter.cfg" type="cfg"/>
+  <File modified="2024 10 21 12:28:44" name="misc/spi_counter_tmpl.v" type="template_verilog"/>
+  <File modified="2024 10 21 12:28:44" name="misc/spi_counter_tmpl.vhd" type="template_vhdl"/>
+  <File modified="2024 10 21 12:28:44" name="rtl/spi_counter.v" type="top_level_verilog"/>
+  <File modified="2024 10 21 12:28:44" name="constraints/spi_counter.ldc" type="timing_constraints"/>
+  <File modified="2024 10 21 12:28:44" name="testbench/dut_params.v" type="dependency_file"/>
+  <File modified="2024 10 21 12:28:44" name="testbench/dut_inst.v" type="dependency_file"/>
+  <File modified="2024 10 21 12:28:44" name="eval/dut_params.v" type="dependency_file"/>
+  <File modified="2024 10 21 12:28:44" name="eval/dut_inst.v" type="dependency_file"/>
+  <File modified="2024 10 21 12:28:44" name="component.xml" type="IP-XACT_component"/>
+  <File modified="2024 10 21 12:28:44" name="design.xml" type="IP-XACT_design"/>
+  <File modified="2021 06 01 00:50:15" name="testbench/tb_top.v" type="testbench_verilog"/>
+  <File modified="2023 10 20 06:21:07" name="eval/constraint.pdc" type="eval"/>
+ </Package>
+</RadiantModule>

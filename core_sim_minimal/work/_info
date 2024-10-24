@@ -1,0 +1,278 @@
+m255
+K4
+z2
+!s11f vlog 2023.3 2023.07, Jul 18 2023
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/matej/RadiantProjects/VNA_FPGA_DSP/core_sim_minimal
+vadc_counter
+Z1 2C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/adc_counter/rtl/adc_counter.v
+Z2 !s125 LATTICE_CONN
+Z3 !s110 1729620816
+!i10b 1
+!s100 G<TSO<E65>2=Hk?W96;XT2
+I?bfJo4O2L09hW8QlnQ5F]0
+R0
+Z4 w1729412714
+Z5 8C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/adc_counter/rtl/adc_counter.v
+Z6 FC:/Users/matej/RadiantProjects/VNA_FPGA_DSP/adc_counter/rtl/adc_counter.v
+!i122 33
+Z7 L0 11 21
+Z8 VDg1SIo80bB@j0V0VzS_@n1
+Z9 OT;L;2023.3;77
+r1
+!s85 0
+31
+Z10 !s108 1729620816.000000
+Z11 !s107 C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/adc_counter/rtl/adc_counter.v|
+Z12 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/adc_counter/rtl/adc_counter.v|
+!s101 -O0
+!i113 1
+Z13 o-work work -O0
+Z14 tCvgOpt 0
+vadc_counter_ipgen_lscc_cntr
+R1
+R3
+!i10b 1
+!s100 2W]N:Dehj>29c99H<:1Pg1
+I5U1YoVND83Oii;JkQZeFa1
+R0
+R4
+R5
+R6
+!i122 33
+Z15 L0 88 70
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!s101 -O0
+!i113 1
+R13
+R14
+vdsp_core
+2C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/core.v
+R3
+!i10b 1
+!s100 ]J^ogLL?S:C@Z5V0P==QH1
+I36m2<Gk:4OoG2Vfk6`4oz3
+R0
+w1729620815
+8C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/core.v
+FC:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/core.v
+!i122 30
+L0 1 263
+R8
+R9
+r1
+!s85 0
+31
+R10
+!s107 C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/core.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/core.v|
+!s101 -O0
+!i113 1
+R13
+R14
+vdsp_core_tf
+2C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v
+Z16 !s110 1729620817
+!i10b 1
+!s100 E>m2mOiZf796i11BhnG]e0
+I@T87PBlHRMA<ge13HUQ>a2
+R0
+w1729616611
+8C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v
+FC:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v
+!i122 35
+L0 18 259
+R8
+R9
+r1
+!s85 0
+31
+!s108 1729620817.000000
+!s107 C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v|
+!s101 -O0
+!i113 1
+R13
+R14
+vraw_meas_ram
+Z17 2C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/raw_meas_ram/rtl/raw_meas_ram.v
+R2
+R3
+!i10b 1
+!s100 MUG5@W9[XJmAf13=d:DNP3
+I^iL4cSH?OC__hSgjcmba43
+R0
+Z18 w1729620691
+Z19 8C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/raw_meas_ram/rtl/raw_meas_ram.v
+Z20 FC:/Users/matej/RadiantProjects/VNA_FPGA_DSP/raw_meas_ram/rtl/raw_meas_ram.v
+!i122 32
+L0 11 186
+R8
+R9
+r1
+!s85 0
+31
+R10
+Z21 !s107 C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/raw_meas_ram/rtl/raw_meas_ram.v|
+Z22 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/raw_meas_ram/rtl/raw_meas_ram.v|
+!s101 -O0
+!i113 1
+R13
+R14
+vraw_meas_ram_ipgen_lscc_ram_dp
+R17
+R3
+!i10b 1
+!s100 f23Ag0]bG[]AHNY]kMM7D0
+I5<KdZTIIIPDk^C<DEZ[;[1
+R0
+R18
+R19
+R20
+!i122 32
+L0 252 350
+R8
+R9
+r1
+!s85 0
+31
+R10
+R21
+R22
+!s101 -O0
+!i113 1
+R13
+R14
+vraw_meas_ram_ipgen_lscc_ram_dp_core
+R17
+R3
+!i10b 1
+!s100 I@3UB6nR4ZR`kfekD8VWV2
+IUWnbbPbNUkaWnz2^LAL@b3
+R0
+R18
+R19
+R20
+!i122 32
+L0 3996 2847
+R8
+R9
+r1
+!s85 0
+31
+R10
+R21
+R22
+!s101 -O0
+!i113 1
+R13
+R14
+vraw_meas_ram_ipgen_lscc_ram_dp_main
+R17
+R3
+!i10b 1
+!s100 RE21eA_iMJ`:6iic7QJIc2
+Imh938?gH@Cg<ImLUz1lPj1
+R0
+R18
+R19
+R20
+!i122 32
+L0 657 3278
+R8
+R9
+r1
+!s85 0
+31
+R10
+R21
+R22
+!s101 -O0
+!i113 1
+R13
+R14
+vsoft_spi_slave
+2C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v
+R3
+!i10b 1
+!s100 R<46ezHVUgR9^NE5ohgG20
+I:7KjfRl0CIf_6JF5;XeCO3
+R0
+w1729530582
+8C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v
+FC:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v
+!i122 31
+L0 2 148
+R8
+R9
+r1
+!s85 0
+31
+R10
+!s107 C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v|
+!s101 -O0
+!i113 1
+R13
+R14
+vspi_counter
+Z23 2C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v
+R2
+R16
+!i10b 1
+!s100 Qo;1m6egfPgcF@jYn?PS31
+I;chjG3V:9fgW@hIVVhW9<2
+R0
+Z24 w1729506524
+Z25 8C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v
+Z26 FC:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v
+!i122 34
+R7
+R8
+R9
+r1
+!s85 0
+31
+R10
+Z27 !s107 C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v|
+Z28 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v|
+!s101 -O0
+!i113 1
+R13
+R14
+vspi_counter_ipgen_lscc_cntr
+R23
+R16
+!i10b 1
+!s100 C4lNzi;Ll5=X`;i@]JeJE3
+I3T3E9ANL=LbR0_f4M7<=V1
+R0
+R24
+R25
+R26
+!i122 34
+R15
+R8
+R9
+r1
+!s85 0
+31
+R10
+R27
+R28
+!s101 -O0
+!i113 1
+R13
+R14

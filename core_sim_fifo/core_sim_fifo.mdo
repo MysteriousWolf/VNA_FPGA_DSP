@@ -1,0 +1,18 @@
+if {![file exists "C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/core_sim_fifo/core_sim_fifo.mpf"]} { 
+	project new "C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/core_sim_fifo" core_sim_fifo
+	project addfile "C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/core.v" verilog
+	project addfile "C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v" verilog
+	project addfile "C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v" verilog
+	project addfile "C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v" verilog
+	vlib  work
+	vdel -lib work -all 
+	vlib work
+
+	vlog  "+incdir+C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source" -work work  "C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/core.v" -suppress 2388
+	vlog  "+incdir+C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source" -work work  "C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v" -suppress 2388
+	vlog  "+incdir+C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl" -work work  "C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v" -suppress 2388
+	vlog  "+incdir+C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1" -work work  "C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v" -suppress 2388
+} else {
+	project open "C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/core_sim_fifo/core_sim_fifo"
+	project compileoutofdate
+}

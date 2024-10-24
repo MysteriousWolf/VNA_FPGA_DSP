@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<ipxact:design xmlns:ipxact="http://www.accellera.org/XMLSchema/IPXACT/1685-2014" xmlns:lattice="http://www.latticesemi.com/lattice" xmlns:lsccip="http://www.latticesemi.com/XMLSchema/Radiant/ip">
+    <ipxact:vendor>latticesemi.com</ipxact:vendor>
+    <ipxact:library>module</ipxact:library>
+    <ipxact:name>spi_counter</ipxact:name>
+    <ipxact:version>2.0.0</ipxact:version>
+    <ipxact:componentInstances>
+        <ipxact:componentInstance>
+            <ipxact:instanceName>lscc_cntr_inst</ipxact:instanceName>
+            <ipxact:componentRef library="module" name="counter" vendor="latticesemi.com" version="2.0.0">
+                <ipxact:configurableElementValues>
+                    <ipxact:configurableElementValue referenceId="CNTR_WIDTH">5</ipxact:configurableElementValue>
+                    <ipxact:configurableElementValue referenceId="CNTR_DIR">1</ipxact:configurableElementValue>
+                    <ipxact:configurableElementValue referenceId="CNTR_LVALUE">0</ipxact:configurableElementValue>
+                    <ipxact:configurableElementValue referenceId="CNTR_HVALUE">31</ipxact:configurableElementValue>
+                    <ipxact:configurableElementValue referenceId="CNTR_LOAD">False</ipxact:configurableElementValue>
+                    <ipxact:configurableElementValue referenceId="FAMILY">iCE40UP</ipxact:configurableElementValue>
+                </ipxact:configurableElementValues>
+            </ipxact:componentRef>
+        </ipxact:componentInstance>
+    </ipxact:componentInstances>
+    <ipxact:adHocConnections>
+        <ipxact:adHocConnection>
+            <ipxact:name>spi_counter.clk_i</ipxact:name>
+            <ipxact:portReferences>
+                <ipxact:internalPortReference componentRef="spi_counter" portRef="clk_i"/>
+                <ipxact:externalPortReference portRef="clk_i"/>
+            </ipxact:portReferences>
+        </ipxact:adHocConnection>
+        <ipxact:adHocConnection>
+            <ipxact:name>spi_counter.clk_en_i</ipxact:name>
+            <ipxact:portReferences>
+                <ipxact:internalPortReference componentRef="spi_counter" portRef="clk_en_i"/>
+                <ipxact:externalPortReference portRef="clk_en_i"/>
+            </ipxact:portReferences>
+        </ipxact:adHocConnection>
+        <ipxact:adHocConnection>
+            <ipxact:name>spi_counter.aclr_i</ipxact:name>
+            <ipxact:portReferences>
+                <ipxact:internalPortReference componentRef="spi_counter" portRef="aclr_i"/>
+                <ipxact:externalPortReference portRef="aclr_i"/>
+            </ipxact:portReferences>
+        </ipxact:adHocConnection>
+        <ipxact:adHocConnection>
+            <ipxact:name>spi_counter.updown_i</ipxact:name>
+            <ipxact:tiedValue>1'b0</ipxact:tiedValue>
+            <ipxact:portReferences>
+                <ipxact:internalPortReference componentRef="spi_counter" portRef="updown_i"/>
+            </ipxact:portReferences>
+        </ipxact:adHocConnection>
+        <ipxact:adHocConnection>
+            <ipxact:name>spi_counter.load_i</ipxact:name>
+            <ipxact:tiedValue>1'b0</ipxact:tiedValue>
+            <ipxact:portReferences>
+                <ipxact:internalPortReference componentRef="spi_counter" portRef="load_i"/>
+            </ipxact:portReferences>
+        </ipxact:adHocConnection>
+        <ipxact:adHocConnection>
+            <ipxact:name>spi_counter.ldata_i</ipxact:name>
+            <ipxact:tiedValue>1'b0</ipxact:tiedValue>
+            <ipxact:portReferences>
+                <ipxact:internalPortReference componentRef="spi_counter" portRef="ldata_i"/>
+            </ipxact:portReferences>
+        </ipxact:adHocConnection>
+        <ipxact:adHocConnection>
+            <ipxact:name>spi_counter.q_o</ipxact:name>
+            <ipxact:portReferences>
+                <ipxact:internalPortReference componentRef="spi_counter" portRef="q_o"/>
+                <ipxact:externalPortReference portRef="q_o">
+                    <ipxact:partSelect>
+                        <ipxact:range>
+                            <ipxact:left>4</ipxact:left>
+                            <ipxact:right>0</ipxact:right>
+                        </ipxact:range>
+                    </ipxact:partSelect>
+                </ipxact:externalPortReference>
+            </ipxact:portReferences>
+        </ipxact:adHocConnection>
+    </ipxact:adHocConnections>
+</ipxact:design>

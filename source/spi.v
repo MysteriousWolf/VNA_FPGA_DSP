@@ -4,7 +4,8 @@ module soft_spi_slave
 	parameter msg_width = 32,
 	parameter addr_width = 7,
 	localparam rw_bit = 1,
-	localparam data_width = msg_width - addr_width - rw_bit,
+	localparam meta_width = rw_bit + addr_width,
+	localparam data_width = msg_width - meta_width,
 	localparam counter_width = $clog2(msg_width),
 	localparam data_counter_width = $clog2(data_width)
 )
@@ -15,21 +16,30 @@ module soft_spi_slave
 	
 	// SPI MCU connections
 	input 		sck,
-    input		ncs,
-    output reg	so,
-    input 		si,
+	input		ncs,
+	output reg	so,
+	input 		si,
 	
 	// SPI Control
 	output reg [addr_width-1:0]	addr,
-	output reg 					addr_ready,
+	output reg					addr_ready,
 	output reg					rw,				// 1 is read 0 is write
-	output reg [data_width-1:0] data_out,
-	output reg 					data_ready,
-	input      [data_width-1:0] data_in 		// Must be ready within 1 serial clock cycle
+	output reg [data_width-1:0]	data_out,
+	output reg					data_ready,
+	input      [data_width-1:0]	data_in 		// Must be ready within 1 serial clock cycle
 );
+	// Wires
+	wire spi_rst = rst || ncs;
+
 	// Counters
-	reg [counter_width:0] data_count;
-	reg [data_counter_width - 1:0] data_out_count;
+	wire [counter_width-1:0] data_count;
+	reg rw_ready;
+	spi_counter SPI_CNT(
+		.clk_i(~sck),
+        .clk_en_i(~ncs),
+        .aclr_i(spi_rst || ~rw_ready),
+        .q_o(data_count)
+	);
 	
 	// Data shift reg (needs 1 less bit due to how last bit is handled to reduce output latency and allow consecutive packets)
 	reg [data_width-2:0] data_reg;
@@ -41,20 +51,15 @@ module soft_spi_slave
 	
 	// Incoming data shift reg
 	always @ (posedge clk) begin
-		if (rst || ncs) begin
-			// Reset counters
-			data_count <= 0;
+		if (spi_rst) begin
 			// Reset registers
 			data_reg <= 0;
 		end else begin
 			if(sck_risingedge) begin
 				// Shifting into the data register
 				data_reg <= {data_reg[data_width-3:0], si};
-				data_count <= data_count + 1'd1;
 			end else if (sck_fallingedge && data_ready) begin
 				// Counter overflow, prepare for another data packet
-				// Reset counters
-				data_count <= 0;
 				// Reset registers
 				data_reg <= 0;
 			end
@@ -63,18 +68,21 @@ module soft_spi_slave
 	
 	// Address handling
 	always @ (posedge clk) begin
-		if (rst || ncs) begin
+		if (spi_rst) begin
 			// Reset outputs
 			rw <= 0;
 			// Reset signals
+			rw_ready <= 0;
 			addr_ready <= 0;
 			// Reset registers
 			addr <= 0;
 		end else begin
 			if(sck_risingedge) begin
 				// Check the R/W bit
-				if (data_count == 0)
+				if (data_count == 0) begin
 					rw <= si;
+					rw_ready <= 1;
+				end
 				
 				// Check when the address portion is fully received and move it to the output
 				if (data_count == (addr_width + rw_bit) - 1) begin
@@ -86,6 +94,7 @@ module soft_spi_slave
 				// Reset outputs
 				rw <= 0;
 				// Reset signals
+				rw_ready <= 0;
 				addr_ready <= 0;
 				// Reset registers
 				addr <= 0;
@@ -95,7 +104,7 @@ module soft_spi_slave
 	
 	// Data handling
 	always @ (posedge clk) begin
-		if (rst || ncs) begin
+		if (spi_rst) begin
 			// Reset signals
 			data_ready <= 0;
 			// Reset registers
@@ -119,24 +128,19 @@ module soft_spi_slave
 
 	// Data out handling
 	always @ (posedge clk) begin
-		if (rst || ncs) begin
+		if (spi_rst) begin
 			// Reset outputs
 			so <= 0;
-			// Reset counters
-			data_out_count <= 0;
 		end else begin
 			if (sck_fallingedge) begin
 				// Counter overflow, prepare for another data packet
 				if (data_ready) begin
 					// Reset outputs
 					so <= 0;
-					// Reset counters
-					data_out_count <= 0;
 				end else if (addr_ready) begin
 					// Shift out the outgoing data
-					if (data_out_count < data_width) begin
-						so <= data_in[data_width - 1 - data_out_count];
-						data_out_count <= data_out_count + 1;
+					if (data_count < msg_width) begin
+						so <= data_in[msg_width - (data_count + 1)];
 					end
 				end
 			end
