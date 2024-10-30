@@ -12,7 +12,6 @@ module soft_spi_slave
 (
 	// General signals
 	input rst,
-	input clk, 								// Should be at least 4x faster than SCK
 	
 	// SPI MCU connections
 	input 		sck,
@@ -24,6 +23,7 @@ module soft_spi_slave
 	output reg [addr_width-1:0]	addr,
 	output reg					addr_ready,
 	output reg					rw,				// 1 is read 0 is write
+	output reg					rw_ready,
 	output reg [data_width-1:0]	data_out,
 	output reg					data_ready,
 	input      [data_width-1:0]	data_in 		// Must be ready within 1 serial clock cycle
@@ -33,116 +33,78 @@ module soft_spi_slave
 
 	// Counters
 	wire [counter_width-1:0] data_count;
-	reg rw_ready;
 	spi_counter SPI_CNT(
 		.clk_i(~sck),
         .clk_en_i(~ncs),
-        .aclr_i(spi_rst || ~rw_ready),
+        .aclr_i(spi_rst),
         .q_o(data_count)
 	);
 	
 	// Data shift reg (needs 1 less bit due to how last bit is handled to reduce output latency and allow consecutive packets)
 	reg [data_width-2:0] data_reg;
-	
-	// Sync SCK to the FPGA clock using a 3-bit shift register
-	reg [1:0] sck_r; always @(posedge clk) sck_r <= {sck_r[0], sck};
-	wire sck_risingedge = sck_r == 2'b01;
-	wire sck_fallingedge = sck_r == 2'b10;
+
+	// condition flags
+	wire rw_ready_c = data_count == 0;
+	wire addr_ready_c = data_count == (addr_width + rw_bit) - 1;
+	wire data_ready_c = data_count == (msg_width) - 1;
 	
 	// Incoming data shift reg
-	always @ (posedge clk) begin
-		if (spi_rst) begin
-			// Reset registers
-			data_reg <= 0;
-		end else begin
-			if(sck_risingedge) begin
-				// Shifting into the data register
-				data_reg <= {data_reg[data_width-3:0], si};
-			end else if (sck_fallingedge && data_ready) begin
-				// Counter overflow, prepare for another data packet
-				// Reset registers
-				data_reg <= 0;
-			end
-		end
-	end
-	
-	// Address handling
-	always @ (posedge clk) begin
+	always @ (posedge sck or posedge spi_rst) begin
 		if (spi_rst) begin
 			// Reset outputs
 			rw <= 0;
-			// Reset signals
 			rw_ready <= 0;
 			addr_ready <= 0;
-			// Reset registers
-			addr <= 0;
-		end else begin
-			if(sck_risingedge) begin
-				// Check the R/W bit
-				if (data_count == 0) begin
-					rw <= si;
-					rw_ready <= 1;
-				end
-				
-				// Check when the address portion is fully received and move it to the output
-				if (data_count == (addr_width + rw_bit) - 1) begin
-					addr <= {data_reg[addr_width-2:0], si};
-					addr_ready <= 1;
-				end
-			end else if (sck_fallingedge && data_ready) begin
-				// Counter overflow, prepare for another data packet
-				// Reset outputs
-				rw <= 0;
-				// Reset signals
-				rw_ready <= 0;
-				addr_ready <= 0;
-				// Reset registers
-				addr <= 0;
-			end
-		end
-	end
-	
-	// Data handling
-	always @ (posedge clk) begin
-		if (spi_rst) begin
-			// Reset signals
 			data_ready <= 0;
 			// Reset registers
+			data_reg <= 0;
+			addr <= 0;
 			data_out <= 0;
 		end else begin
-			if(sck_risingedge) begin
-				// Check when the entire message is received
-				if (data_count == (msg_width) - 1) begin
-					data_out <= {data_reg[data_width-2:0], si};
-					data_ready <= 1;
-				end
-			end else if (sck_fallingedge && data_ready) begin
-				// Counter overflow, prepare for another data packet
-				// Reset signals
-				data_ready <= 0;
-				// Reset registers
+			// Shifting into the data register
+			data_reg <= {data_reg[data_width-3:0], si};
+
+			// Check the R/W bit
+			if (rw_ready_c) begin
+				rw <= si;
+				rw_ready <= 1;
+			end else if (data_ready_c) begin
+				rw <= 0;
+				rw_ready <= 0;
+			end
+			
+			// Check when the address portion is fully received and move it to the output
+			if (addr_ready_c) begin
+				addr <= {data_reg[addr_width-2:0], si};
+				addr_ready <= 1;
+			end else if (data_ready_c) begin
+				addr <= 0;
+				addr_ready <= 0;
+			end
+
+			// Check when the entire message is received
+			if (data_ready_c) begin
+				data_out <= {data_reg[data_width-2:0], si};
+				data_ready <= 1;
+			end else if (rw_ready_c) begin
 				data_out <= 0;
+				data_ready <= 0;
 			end
 		end
 	end
 
 	// Data out handling
-	always @ (posedge clk) begin
+	always @ (negedge sck or posedge spi_rst) begin
 		if (spi_rst) begin
 			// Reset outputs
 			so <= 0;
 		end else begin
-			if (sck_fallingedge) begin
-				// Counter overflow, prepare for another data packet
-				if (data_ready) begin
-					// Reset outputs
-					so <= 0;
-				end else if (addr_ready) begin
-					// Shift out the outgoing data
-					if (data_count < msg_width) begin
-						so <= data_in[msg_width - (data_count + 1)];
-					end
-				end
+			// Counter overflow, prepare for another data packet
+			if (addr_ready && (data_count < (msg_width - 1))) begin
+				// Shift out the outgoing data
+				so <= data_in[msg_width - (data_count + 2)];
+			end else begin
+				so <= 0;
 			end
 		end
 	end
