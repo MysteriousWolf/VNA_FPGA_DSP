@@ -40,34 +40,12 @@ module dsp_core
 	wire hs_clk; 		// 250 MHz - High speed clock
 	wire ms_clk;		// 125 MHz - Medium speed clock (this can either be divided by 2 to get 62.5 MHz clock signal (for ADC), or we can simply route out the low speed clock)
 	reg ls_clk; 		// 62.5 MHz - Low speed clock
-	reg uls_clk;		// 31.25 MHz - Ultra low speed clock for scope to see
-	
-	// SPI Sync
-	reg sck_r, sck_rr;
-	always @ (posedge uls_clk) begin
-		sck_r <= sck;
-		sck_rr <= sck_r;
-	end
-    reg ncs_r, ncs_rr;
-	always @ (posedge uls_clk) begin
-		ncs_r <= ncs;
-		ncs_rr <= ncs_r;
-	end
-    reg si_r, si_rr;
-	always @ (posedge uls_clk) begin
-		si_r <= si;
-		si_rr <= si_r;
-	end
-	always @ (posedge uls_clk) begin
-		spi_rst <= global_rst;
-	end
 	
 	// SPI Control
+	wire 		spi_rw_ready, spi_addr_rdy, spi_data_rdy;
 	wire [6:0]	spi_addr;		// 7 bit address
-	wire 		spi_addr_rdy;
 	wire 		spi_rw;			// 1 is read 0 is write
-	wire [23:0]	spi_data;	// 24 bit data
-	wire 		spi_data_rdy;
+	wire [23:0]	spi_data;		// 24 bit data
 	reg [23:0]	spi_data_tx;	// 24 bit data - must be ready within 1 serial clock cycle
 	
 	// ADC FIFO Data Signals
@@ -94,54 +72,52 @@ module dsp_core
 	soft_spi_slave SPI(
 		// Global signals
 		.rst(spi_rst),
-		.clk(uls_clk),
 		
 		// SPI interface
-		.sck(sck_rr),
-		.ncs(ncs_rr),
+		.sck(sck),
+		.ncs(ncs),
 		.so(so),
-		.si(si_rr),
+		.si(si),
 		
 		// Internal signals
 		.addr(spi_addr),
 		.addr_ready(spi_addr_rdy),
 		
 		.rw(spi_rw),
+		.rw_ready(spi_rw_ready),
 		
 		.data_out(spi_data),
 		.data_ready(spi_data_rdy),
 		
 		.data_in(spi_ab)
 	);
+
+	reg [11:0] test_c;
+	always @ (negedge adc_conv_clk) begin
+		if (global_rst)
+			test_c <= 0;
+		else
+			test_c <= test_c + 1;
+	end
+	wire [23:0] test_cw = {test_c, test_c};
 	
-	/*meas_fifo MEAS_FIFO(
-        .rst_i(global_rst || fifo_clear),
-        .rp_rst_i(1'b0), // For retransmission - no need to use right now
-		
-		.wr_clk_i(~adc_conv_clk),
-        .wr_en_i(fifo_wr_en),
-        .wr_data_i(adc_ab),
-		
-        .rd_clk_i(spi_rw),
-        .rd_en_i(fifo_rd_en),
-        .rd_data_o(spi_ab),
-		
-        .full_o(fifo_full),
-        .empty_o(fifo_empty)
-	);*/
-	
-	meas_fifo_sc MEAS_FIFO(
-		.clk_i(ram_clock),
-		.rst_i(global_rst || fifo_clear),
-		
-		.wr_en_i(fifo_wr_en),
-		.wr_data_i(adc_ab),
-		
-		.rd_en_i(fifo_rd_en),
-		.rd_data_o(spi_ab),
-		
-		.full_o(fifo_full),
-		.empty_o(fifo_empty)
+	fifo #(
+		.max_data_count(4)
+	) meas_fifo (
+		.rst(global_rst || fifo_clear),
+
+		.write_en(fifo_wr_en),
+		.wclk(adc_conv_clk),
+		//.din(adc_ab),
+		.din(test_cw),
+		//.din(device_ID),
+
+		.rclk(spi_rw),
+		.dout(spi_ab),
+
+		.full(fifo_full),
+		.empty(fifo_empty),
+		.direction()
 	);
 	
 	// Get rising PLL lock signal edge (so we can reset logic internally)
@@ -157,12 +133,8 @@ module dsp_core
 	always @ (posedge ms_clk) begin
 		if (global_rst) begin
 			ls_clk <= 0;
-			uls_clk <= 0;
 		end else begin
 			ls_clk <= ~ls_clk;
-			
-			if (ls_clk)
-				uls_clk <= ~uls_clk;
 		end
 	end
 	
@@ -178,16 +150,6 @@ module dsp_core
 		end else begin
 			addr_rdy_r <= {addr_rdy_r[0], spi_addr_rdy};
 			addr_rdy_rising_d <= addr_rdy_rising;
-		end
-	end
-	
-	always @ (posedge uls_clk) begin
-		if (global_rst) begin
-			// Reset data registry
-			spi_data_tx <= 24'b0;
-		end begin
-			// Always assert the SPI out data to reduce potential latency
-			spi_data_tx <= spi_ab;
 		end
 	end
 	

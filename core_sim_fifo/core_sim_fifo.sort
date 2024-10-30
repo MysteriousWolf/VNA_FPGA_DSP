@@ -1,4 +1,5 @@
 C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/core.v
 C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v
 C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v
-C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v
+C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/ram.v
+C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/testbench/VNA_FPGA_DSP_minimal_tf.v

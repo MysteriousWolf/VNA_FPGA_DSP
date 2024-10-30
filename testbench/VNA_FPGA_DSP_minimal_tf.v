@@ -14,6 +14,125 @@
 
 `timescale 1 ns / 1 ps
 
+// FIFO Module with parameterized depth
+module meas_fifo #(
+    parameter FIFO_DEPTH = 4,
+    parameter ADDR_WIDTH = $clog2(FIFO_DEPTH),
+    parameter USE_OUTPUT_REG = 1  // Set to 1 to enable output registers
+) (
+    input wire wr_clk_i,
+    input wire rd_clk_i,
+    input wire rst_i,
+    input wire rp_rst_i,
+    input wire wr_en_i,
+    input wire rd_en_i,
+    input wire [23:0] wr_data_i,
+    output wire full_o,
+    output wire empty_o,
+    output reg [23:0] rd_data_o
+);
+
+    // Memory array
+    reg [23:0] mem [0:FIFO_DEPTH-1];
+    
+    // Pointers and internal signals
+    reg [ADDR_WIDTH:0] wr_ptr, rd_ptr;
+    reg [ADDR_WIDTH:0] wr_ptr_gray, rd_ptr_gray;
+    reg [ADDR_WIDTH:0] wr_ptr_sync, rd_ptr_sync;
+    
+    // Internal signals for read control
+    reg [23:0] rd_data_internal;
+    reg rd_data_valid;
+    
+    // Gray code conversion function
+    function [ADDR_WIDTH:0] bin2gray(input [ADDR_WIDTH:0] bin);
+        bin2gray = (bin >> 1) ^ bin;
+    endfunction
+    
+    // Write logic - on falling edge
+    always @(negedge wr_clk_i or posedge rst_i) begin
+        if (rst_i) begin
+            wr_ptr <= 0;
+            wr_ptr_gray <= 0;
+        end else if (wr_en_i && !full_o) begin
+            mem[wr_ptr[ADDR_WIDTH-1:0]] <= wr_data_i;
+            wr_ptr <= wr_ptr + 1;
+            wr_ptr_gray <= bin2gray(wr_ptr + 1);
+        end
+    end
+
+    // Read data fetch on falling edge
+    always @(negedge rd_clk_i or posedge rst_i) begin
+        if (rst_i) begin
+            rd_data_internal <= 0;
+            rd_data_valid <= 0;
+        end else begin
+            if (rd_en_i && !empty_o) begin
+                rd_data_internal <= mem[rd_ptr[ADDR_WIDTH-1:0]];
+                rd_data_valid <= 1;
+            end else begin
+                rd_data_valid <= 0;
+            end
+        end
+    end
+
+    // Read pointer update and output presentation
+    generate
+        if (USE_OUTPUT_REG) begin
+            // Registered output - updates on rising edge
+            always @(posedge rd_clk_i or posedge rst_i) begin
+                if (rst_i) begin
+                    rd_ptr <= 0;
+                    rd_ptr_gray <= 0;
+                    rd_data_o <= 0;
+                end else begin
+                    if (rd_data_valid) begin
+                        rd_data_o <= rd_data_internal;
+                        rd_ptr <= rd_ptr + 1;
+                        rd_ptr_gray <= bin2gray(rd_ptr + 1);
+                    end
+                end
+            end
+        end else begin
+            // Combinational output
+            always @(negedge rd_clk_i or posedge rst_i) begin
+                if (rst_i) begin
+                    rd_ptr <= 0;
+                    rd_ptr_gray <= 0;
+                end else if (rd_en_i && !empty_o) begin
+                    rd_ptr <= rd_ptr + 1;
+                    rd_ptr_gray <= bin2gray(rd_ptr + 1);
+                end
+            end
+            
+            always @(*) begin
+                rd_data_o = rd_data_internal;
+            end
+        end
+    endgenerate
+    
+    // Synchronization registers
+    always @(posedge wr_clk_i or posedge rst_i) begin
+        if (rst_i)
+            rd_ptr_sync <= 0;
+        else
+            rd_ptr_sync <= rd_ptr_gray;
+    end
+    
+    always @(posedge rd_clk_i or posedge rst_i) begin
+        if (rst_i)
+            wr_ptr_sync <= 0;
+        else
+            wr_ptr_sync <= wr_ptr_gray;
+    end
+    
+    // Status flags
+    assign full_o = (wr_ptr_gray == {~rd_ptr_sync[ADDR_WIDTH:ADDR_WIDTH-1], 
+                                    rd_ptr_sync[ADDR_WIDTH-2:0]});
+    assign empty_o = (rd_ptr_gray == wr_ptr_sync);
+
+endmodule
+
 // Define Module for Test Fixture
 module dsp_core_tf();
 	
@@ -48,7 +167,7 @@ module dsp_core_tf();
 
 // Outputs
     wire so;
-    //wire meas_done;
+    wire meas_done;
     wire adc_clk;
 
 // Bidirs
@@ -68,7 +187,7 @@ module dsp_core_tf();
         .ncs(ncs), 
         .so(so), 
         .si(si), 
-        //.meas_done(meas_done), 
+        .meas_done(meas_done), 
         .adc_clk(adc_clk),
 		.adc_conv_clk(adc_conv_clk),
 		.adc_a(adc_a),
@@ -256,74 +375,19 @@ initial begin
     forever begin
         #(2 * SCK_PERIOD);
         rst = 0;
+		
+		// Start the conversion
+		send_DSP(7'b0000000, 24'h000000);
 
-		// Read the PLL lock bit to make sure we are reading correctly
-        read_DSP(7'b0000001, rx_data);
-		
-        // Start conversion
-        send_DSP(7'b0000010, 24'h002004);
-		
-		// Wait for the measurement
-		monitor_dsp_conversion(10, conversion_success, final_count);
-
-		if (conversion_success) begin
-			$display("Conversion completed successfully. Final reported count: %d", final_count);
-		end else begin
-			$display("Conversion failed or timed out. Last count: %d", final_count);
-		end
-			
-		// Restart readout
-		send_DSP(7'b0000100, 24'h000001);
-		
-		// Read the next point
-		read_DSP(7'b0000100, rx_data);
-		read_DSP(7'b0000101, rx_data);
-		
-		// Read the next point
-		read_DSP(7'b0000100, rx_data);
-		read_DSP(7'b0000101, rx_data);
-		
-		// Read the next point
-		read_DSP(7'b0000100, rx_data);
-		read_DSP(7'b0000101, rx_data);
-		
-		// Read the next point
-		read_DSP(7'b0000100, rx_data);
-		read_DSP(7'b0000101, rx_data); // This one should report that we are done on bit 13
-
-        // Wait a bit to test consecutive reads
-        #(2*SCK_PERIOD);
-		
-		// Start conversion
-        send_DSP(7'b0000010, 24'h002004);
-		
-		// Wait for the measurement
-		monitor_dsp_conversion(10, conversion_success, final_count);
-
-		if (conversion_success) begin
-			$display("Conversion completed successfully. Final count: %d", final_count);
-		end else begin
-			$display("Conversion failed or timed out. Last count: %d", final_count);
-		end
-			
-		// Restart readout
-		send_DSP(7'b0000100, 24'h000001);
-		
-		// Read the next point
-		read_DSP(7'b0000100, rx_data);
-		read_DSP(7'b0000101, rx_data);
-		
-		// Read the next point
-		read_DSP(7'b0000100, rx_data);
-		read_DSP(7'b0000101, rx_data);
-		
-		// Read the next point
-		read_DSP(7'b0000100, rx_data);
-		read_DSP(7'b0000101, rx_data);
-		
-		// Read the next point
-		read_DSP(7'b0000100, rx_data);
-		read_DSP(7'b0000101, rx_data); // This one should report that we are done on bit 13
+		// Read some
+		read_DSP(7'b0000000, rx_data);
+		read_DSP(7'b0000000, rx_data);
+		read_DSP(7'b0000000, rx_data);
+		read_DSP(7'b0000000, rx_data);
+		read_DSP(7'b0000000, rx_data);
+		read_DSP(7'b0000000, rx_data);
+		read_DSP(7'b0000000, rx_data);
+		read_DSP(7'b0000000, rx_data);
 
         // Trigger reset after some cycles
         #(2*SCK_PERIOD);

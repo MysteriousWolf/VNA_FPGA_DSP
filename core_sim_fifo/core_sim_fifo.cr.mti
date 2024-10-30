@@ -1,5 +1,20 @@
-C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v {1 {vlog -work work -stats=none C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v
+C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v {1 {vlog -work work -stats=none C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v
 Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
+-- Compiling module soft_spi_slave
+
+Top level modules:
+	soft_spi_slave
+
+} {} {}} C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/ram.v {1 {vlog -work work -stats=none C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/ram.v
+Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
+-- Compiling module fifo
+-- Compiling module ram
+
+Top level modules:
+	fifo
+
+} {} {}} C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v {1 {vlog -work work -stats=none C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/impl_1/VNA_FPGA_DSP_minimal_tf.v
+Model Technology ModelSim - Lattice FPGA Edition vlog 2020.3 Compiler 2020.10 Oct 14 2020
 -- Compiling module meas_fifo_sc
 -- Compiling module meas_fifo
 -- Compiling module dsp_core_tf
@@ -9,12 +24,14 @@ Top level modules:
 	meas_fifo
 	dsp_core_tf
 
-} {} {}} C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v {1 {vlog -work work -stats=none C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/source/spi.v
+} {} {}} C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/testbench/VNA_FPGA_DSP_minimal_tf.v {1 {vlog -work work -stats=none C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/testbench/VNA_FPGA_DSP_minimal_tf.v
 Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
--- Compiling module soft_spi_slave
+-- Compiling module meas_fifo
+-- Compiling module dsp_core_tf
 
 Top level modules:
-	soft_spi_slave
+	meas_fifo
+	dsp_core_tf
 
 } {} {}} C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v {1 {vlog -work work -stats=none C:/Users/matej/RadiantProjects/VNA_FPGA_DSP/spi_counter/rtl/spi_counter.v
 Model Technology ModelSim - Lattice FPGA Edition vlog 2023.3 Compiler 2023.07 Jul 18 2023
