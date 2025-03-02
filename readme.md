@@ -5,7 +5,7 @@ ___
 
 ## The open source 8-16 GHz VNA project  
 Of course, this is built for the open source 8-16 GHz project (my master's thesis), so you can find all the associated resources in the following repositories:
-- Hardware repository - TBD
+- [Hardware repository](https://github.com/MysteriousWolf/VNA_Hardware)
 - [Firmware repository](https://github.com/MysteriousWolf/VNA_Firmware)
 - [FPGA Config repository](https://github.com/MysteriousWolf/VNA_FPGA_DSP/) (this one)
 
